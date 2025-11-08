@@ -1,29 +1,66 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tira Cómica — Nombre del Proyecto</title>
-  <meta name="description" content="Tira cómica semanal con historias divertidas y originales. Descubre cada semana nuevas tiras y síguenos online.">
-  <meta name="keywords" content="tira cómica, cómic online, humor, webcomic, historias semanales">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icedtooz — Tira Cómica Semanal</title>
+  <meta name="description" content="Icedtooz, tira cómica semanal con humor y aventuras originales. Descubre nuevas tiras cada semana online.">
+  <meta name="keywords" content="tira cómica, Icedtooz, cómic online, humor, webcomic, historias semanales">
   <meta name="author" content="Nombre del Autor">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Icedtooz — Tira Cómica Semanal">
+  <meta property="og:description" content="Icedtooz, tira cómica semanal con humor y aventuras originales.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/logo.json">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Icedtooz — Tira Cómica Semanal">
+  <meta name="twitter:description" content="Icedtooz, tira cómica semanal con humor y aventuras originales.">
+  <meta name="twitter:image" content="assets/logo.json">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
   <style>
+    /* Tipografía personalizada */
+    @font-face {
+      font-family: 'IcedtoozFont';
+      src: url('assets/fonts/Grafical-Regular.woff') format('woff2'),
+           url('assets/fonts/Grafical-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background-color: #fafafa;
+      font-family: 'IcedtoozFont', system-ui, -apple-system, sans-serif;
+      background-color: #fdfefe;
+      background-image: 
+        linear-gradient(to right, rgba(173, 216, 230, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(173, 216, 230, 0.4) 1px, transparent 1px);
+      background-size: 24px 24px;
       color: #222;
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
       scroll-behavior: smooth;
+    }
+
+    h1, h2, h3 {
+      font-family: 'IcedtoozFont', system-ui, sans-serif;
     }
 
     header {
       text-align: center;
-      margin-top: 3rem;
+      margin-top: 2rem;
+    }
+
+    #logo {
+      width: 180px;
+      height: 180px;
+      margin: auto;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
     }
 
     header h1 {
@@ -38,115 +75,163 @@
 
     main {
       width: 100%;
-      max-width: 700px;
+      max-width: 1200px;
       padding: 2rem 1rem;
-    }
-
-    .gallery {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 3rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
     }
 
     .comic img {
       width: 100%;
       border-radius: 0.5rem;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s;
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
-    .comic.visible img {
-      opacity: 1;
-      transform: translateY(0);
+    .comic img:hover {
+      transform: scale(1.02);
     }
 
-    footer {
+    section.about, section.contact {
       text-align: center;
-      margin-top: auto;
       padding: 2rem 1rem;
-      font-size: 0.9rem;
-      color: #777;
+      background-color: rgba(255,255,255,0.8);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    footer a {
-      color: #555;
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .socials a {
       text-decoration: none;
+      font-size: 1.5rem;
+      color: #24040e;
+      transition: color 0.3s;
     }
 
-    footer a:hover {
-      text-decoration: underline;
+    .socials a:hover {
+      color: #1da1f2;
     }
 
-    #backToTop {
+   #backToTop {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #24040e;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  z-index: 100;
+  opacity: 0.7;
+  transition: opacity 0.3s, transform 0.3s;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#backToTop:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+#backToTop svg {
+  display: block;
+}
+
+
+    #lightbox {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #222;
-      color: #fff;
-      padding: 0.5rem 0.8rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      opacity: 0.7;
-      transition: opacity 0.3s, visibility 0.3s;
-      z-index: 100;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 200;
     }
 
-    #backToTop:hover {
+    #lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    #lightbox.visible {
+      visibility: visible;
       opacity: 1;
     }
   </style>
 </head>
 <body>
   <header>
-    <div id="logo" style="width:120px; height:120px; margin:auto;"></div>
-    <h1>Tira Cómica</h1>
-    <p>Una nueva historia cada semana ✏️</p>
+    <div id="logo"></div>
+    <h1>nuestra visión</h1>
+    <p>casi nunca es nuestra misión</p>
   </header>
 
   <main>
-    <section class="gallery" id="gallery"></section>
+    <section class="grid">
+      <div class="comic"><img src="assets/tiras/tira01.jpg" alt="Tira cómica Icedtooz #01"></div>
+      <div class="comic"><img src="assets/tiras/tira02.jpg" alt="Tira cómica Icedtooz #02"></div>
+      <div class="comic"><img src="assets/tiras/tira03.jpg" alt="Tira cómica Icedtooz #03"></div>
+      <!-- Añadir más viñetas aquí -->
+    </section>
+
+    <section class="about">
+      <h2>About</h2>
+      <p>Icedtooz es una tira cómica semanal con humor, aventuras y personajes originales. ¡Síguenos cada semana para nuevas historias!</p>
+    </section>
+
+    <section class="contact">
+  <h2>Deja aquí tus sugerencias, halagos o insultos ;)</h2>
+  <form id="contactForm" action="https://formspree.io/f/xeovjaav" method="POST">
+    <input type="text" name="name" placeholder="¿Cómo te llamas?" required style="padding:0.5rem; width:100%; margin-bottom:1rem; border-radius:5px; border:1px solid #ccc;">
+    <input type="email" name="email" placeholder="Dinos tu email" required style="padding:0.5rem; width:100%; margin-bottom:1rem; border-radius:5px; border:1px solid #ccc;">
+    <textarea name="message" placeholder="Cuéntamos" required style="padding:0.5rem; width:100%; margin-bottom:1rem; border-radius:5px; border:1px solid #ccc;" rows="5"></textarea>
+    <button type="submit" style="padding:0.5rem 1rem; border:none; border-radius:5px; background-color:#0086ff; color:#fff; cursor:pointer;">Enviar</button>
+  </form>
+
+  <p class="form-status" style="margin-top:1rem; color:green;"></p>
+
+  <div class="socials">
+    <a href="https://x.com/icedtooz" target="_blank">🐦</a>
+    <a href="https://instagram.com/icedtooz" target="_blank">📸</a>
+    <a href="https://tiktok.com/@icedtooz" target="_blank">🎵</a>
+    <a href="https://facebook.com/icedtooz" target="_blank">📘</a>
+  </div>
+</section>
   </main>
 
-  <footer>
-    <p>© 2025 Nombre del Autor — Todos los derechos reservados.</p>
-    <a href="mailto:contacto@tudominio.com">contacto@tudominio.com</a>
-  </footer>
+  <div id="lightbox"><img src="" alt="Tira ampliada"></div>
+<button id="backToTop" aria-label="Volver arriba">
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 0 L6 12 M0 6 L6 0 L12 6" stroke="#222" stroke-width="2"/>
+  </svg>
+</button>
 
-  <button id="backToTop">⬆ Volver arriba</button>
-
-  <script>
-    // Cargar tiras automáticamente
-    const totalTiras = 10; // Cambia este número según cuántas tengas
-    const gallery = document.getElementById('gallery');
-
-    for (let i = totalTiras; i >= 1; i--) {
-      const article = document.createElement('article');
-      article.classList.add('comic');
-      const img = document.createElement('img');
-      const num = String(i).padStart(2, '0');
-      img.src = `assets/tiras/tira${num}.jpg`;
-      img.alt = `Tira ${num}`;
-      article.appendChild(img);
-      gallery.appendChild(article);
-    }
-
-    // Animación al hacer scroll (fade-in cuando aparece en pantalla)
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.2 });
-
-    document.querySelectorAll('.comic').forEach(el => observer.observe(el));
-
-    // Cargar animación Lottie para el logo
+<script>
+    // Lottie logo
     lottie.loadAnimation({
       container: document.getElementById('logo'),
       renderer: 'svg',
@@ -154,14 +239,67 @@
       autoplay: true,
       path: 'assets/logo.json'
     });
+	
+	  const contactForm = document.getElementById('contactForm');
+const formStatus = document.querySelector('.form-status');
 
-    // Botón volver arriba con visibilidad según scroll
+contactForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(contactForm);
+
+  const response = await fetch(contactForm.action, {
+    method: contactForm.method,
+    body: formData,
+    headers: {
+      'Accept': 'application/json'
+    }
+  });
+
+  if (response.ok) {
+    formStatus.textContent = "¡Mensaje enviado! Gracias por contactarnos.";
+    contactForm.reset();
+  } else {
+    formStatus.textContent = "Error al enviar. Por favor, inténtalo de nuevo.";
+    formStatus.style.color = "red";
+  }
+});
+
+
+    // Scroll fade-in
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelector('img').style.opacity = 1;
+          entry.target.querySelector('img').style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.comic').forEach(el => observer.observe(el));
+
+    // Back to top
     const backToTop = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
       backToTop.style.visibility = window.scrollY > 200 ? 'visible' : 'hidden';
     });
-    backToTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = lightbox.querySelector('img');
+    document.querySelectorAll('.comic img').forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('visible');
+      });
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if(e.target === lightbox) lightbox.classList.remove('visible');
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if(e.code === 'Space') lightbox.classList.remove('visible');
     });
   </script>
 </body>
