@@ -21,12 +21,12 @@
   <meta name="twitter:image" content="assets/logo.json">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+
   <style>
-    /* Tipografía personalizada */
+    /* Tipografía personalizada Grafical */
     @font-face {
-      font-family: 'IcedtoozFont';
-      src: url('assets/fonts/Grafical-Regular.woff') format('woff2'),
-           url('assets/fonts/Grafical-Regular.woff') format('woff');
+      font-family: 'Grafical';
+      src: url('assets/fonts/Grafical-Regular.woff') format('woff');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
@@ -93,7 +93,7 @@
       border-radius: 0.5rem;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       cursor: pointer;
-      transition: transform 0.3s;
+      transition: transform 0.3s, opacity 0.5s;
       opacity: 0;
       transform: translateY(20px);
     }
@@ -108,6 +108,45 @@
       background-color: rgba(255,255,255,0.8);
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Tipografía y estilo del formulario */
+    .contact {
+      font-family: 'Grafical', sans-serif;
+    }
+
+    .contact form input,
+    .contact form textarea {
+      font-family: inherit;
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #0086ff;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .contact form input:focus,
+    .contact form textarea:focus {
+      border-color: #005fcc;
+      box-shadow: 0 0 5px rgba(0, 134, 255, 0.5);
+    }
+
+    .contact form button {
+      font-family: inherit;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #0086ff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .contact form button:hover {
+      background-color: #005fcc;
+      transform: translateY(-2px);
     }
 
     .socials {
@@ -128,34 +167,33 @@
       color: #1da1f2;
     }
 
-   #backToTop {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 36px;
-  height: 36px;
-  border: 2px solid #24040e;
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
-  z-index: 100;
-  opacity: 0.7;
-  transition: opacity 0.3s, transform 0.3s;
-  visibility: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    #backToTop {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 36px;
+      height: 36px;
+      border: 2px solid #24040e;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+      z-index: 100;
+      opacity: 0.7;
+      transition: opacity 0.3s, transform 0.3s;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-#backToTop:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-}
+    #backToTop:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
 
-#backToTop svg {
-  display: block;
-}
-
+    #backToTop svg {
+      display: block;
+    }
 
     #lightbox {
       position: fixed;
@@ -181,6 +219,17 @@
       visibility: visible;
       opacity: 1;
     }
+
+    footer {
+      text-align: center;
+      padding: 1rem 0;
+      background-color: #222;
+      color: #fff;
+      font-family: 'Grafical', sans-serif;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 2rem;
+    }
   </style>
 </head>
 <body>
@@ -204,33 +253,38 @@
     </section>
 
     <section class="contact">
-  <h2>Deja aquí tus sugerencias, halagos o insultos ;)</h2>
-  <form id="contactForm" action="https://formspree.io/f/xeovjaav" method="POST">
-    <input type="text" name="name" placeholder="¿Cómo te llamas?" required style="padding:0.5rem; width:100%; margin-bottom:1rem; border-radius:5px; border:1px solid #ccc;">
-    <input type="email" name="email" placeholder="Dinos tu email" required style="padding:0.5rem; width:100%; margin-bottom:1rem; border-radius:5px; border:1px solid #ccc;">
-    <textarea name="message" placeholder="Cuéntamos" required style="padding:0.5rem; width:100%; margin-bottom:1rem; border-radius:5px; border:1px solid #ccc;" rows="5"></textarea>
-    <button type="submit" style="padding:0.5rem 1rem; border:none; border-radius:5px; background-color:#0086ff; color:#fff; cursor:pointer;">Enviar</button>
-  </form>
+      <h2>Deja aquí tus sugerencias, halagos o insultos ;)</h2>
+      <form id="contactForm" action="https://formspree.io/f/xeovjaav" method="POST">
+        <input type="text" name="name" placeholder="¿Cómo te llamas?" required>
+        <input type="email" name="email" placeholder="Dinos tu email" required>
+        <textarea name="message" placeholder="Cuéntanos" required rows="5"></textarea>
+        <button type="submit">Enviar</button>
+      </form>
 
-  <p class="form-status" style="margin-top:1rem; color:green;"></p>
+      <p class="form-status" style="margin-top:1rem; color:green;"></p>
 
-  <div class="socials">
-    <a href="https://x.com/icedtooz" target="_blank">🐦</a>
-    <a href="https://instagram.com/icedtooz" target="_blank">📸</a>
-    <a href="https://tiktok.com/@icedtooz" target="_blank">🎵</a>
-    <a href="https://facebook.com/icedtooz" target="_blank">📘</a>
-  </div>
-</section>
+      <div class="socials">
+        <a href="https://x.com/icedtooz" target="_blank">🐦</a>
+        <a href="https://instagram.com/icedtooz" target="_blank">📸</a>
+        <a href="https://tiktok.com/@icedtooz" target="_blank">🎵</a>
+        <a href="https://facebook.com/icedtooz" target="_blank">📘</a>
+      </div>
+    </section>
   </main>
 
-  <div id="lightbox"><img src="" alt="Tira ampliada"></div>
-<button id="backToTop" aria-label="Volver arriba">
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6 0 L6 12 M0 6 L6 0 L12 6" stroke="#222" stroke-width="2"/>
-  </svg>
-</button>
+  <footer>
+    © Todos los derechos reservados @ icedtooz 2025
+  </footer>
 
-<script>
+  <div id="lightbox"><img src="" alt="Tira ampliada"></div>
+
+  <button id="backToTop" aria-label="Volver arriba">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 0 L6 12 M0 6 L6 0 L12 6" stroke="#222" stroke-width="2"/>
+    </svg>
+  </button>
+
+  <script>
     // Lottie logo
     lottie.loadAnimation({
       container: document.getElementById('logo'),
@@ -239,32 +293,30 @@
       autoplay: true,
       path: 'assets/logo.json'
     });
-	
-	  const contactForm = document.getElementById('contactForm');
-const formStatus = document.querySelector('.form-status');
 
-contactForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const formData = new FormData(contactForm);
+    // Formulario contacto
+    const contactForm = document.getElementById('contactForm');
+    const formStatus = document.querySelector('.form-status');
 
-  const response = await fetch(contactForm.action, {
-    method: contactForm.method,
-    body: formData,
-    headers: {
-      'Accept': 'application/json'
-    }
-  });
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(contactForm);
 
-  if (response.ok) {
-    formStatus.textContent = "¡Mensaje enviado! Gracias por contactarnos.";
-    contactForm.reset();
-	formStatus.style.color = "#0086ff";
-  } else {
-    formStatus.textContent = "Error al enviar. Por favor, inténtalo de nuevo.";
-    formStatus.style.color = "#ff45b2";
-  }
-});
+      const response = await fetch(contactForm.action, {
+        method: contactForm.method,
+        body: formData,
+        headers: {'Accept': 'application/json'}
+      });
 
+      if (response.ok) {
+        formStatus.textContent = "¡Mensaje enviado! Gracias por contactarnos.";
+        contactForm.reset();
+        formStatus.style.color = "#0086ff";
+      } else {
+        formStatus.textContent = "Error al enviar. Por favor, inténtalo de nuevo.";
+        formStatus.style.color = "#ff45b2";
+      }
+    });
 
     // Scroll fade-in
     const observer = new IntersectionObserver(entries => {
