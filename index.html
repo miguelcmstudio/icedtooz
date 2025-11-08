@@ -258,9 +258,10 @@ contactForm.addEventListener('submit', async (e) => {
   if (response.ok) {
     formStatus.textContent = "¡Mensaje enviado! Gracias por contactarnos.";
     contactForm.reset();
+	formStatus.style.color = "#0086ff";
   } else {
     formStatus.textContent = "Error al enviar. Por favor, inténtalo de nuevo.";
-    formStatus.style.color = "red";
+    formStatus.style.color = "#ff45b2";
   }
 });
 
