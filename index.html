@@ -8,18 +8,6 @@
   <meta name="keywords" content="tira cómica, Icedtooz, cómic online, humor, webcomic, historias semanales">
   <meta name="author" content="Nombre del Autor">
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Icedtooz — Tira Cómica Semanal">
-  <meta property="og:description" content="Icedtooz, tira cómica semanal con humor y aventuras originales.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/logo.json">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Icedtooz — Tira Cómica Semanal">
-  <meta name="twitter:description" content="Icedtooz, tira cómica semanal con humor y aventuras originales.">
-  <meta name="twitter:image" content="assets/logo.json">
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
   <style>
@@ -110,7 +98,7 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* Formulario con imagen a la derecha */
+    /* Contacto con imagen y formulario */
     .contact {
       font-family: 'Grafical', sans-serif;
     }
@@ -119,7 +107,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
+      align-items: stretch;
       gap: 2rem;
       margin-top: 1rem;
     }
@@ -127,11 +115,17 @@
     .contact-wrapper form {
       flex: 1 1 400px;
       max-width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .contact-wrapper .contact-image {
       flex: 1 1 300px;
       max-width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .contact-wrapper .contact-image img {
@@ -257,6 +251,13 @@
       width: 100%;
       margin-top: 2rem;
     }
+
+    @media(max-width: 900px) {
+      .contact-wrapper form,
+      .contact-wrapper .contact-image {
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -271,7 +272,6 @@
       <div class="comic"><img src="assets/tiras/tira01.jpg" alt="Tira cómica Icedtooz #01"></div>
       <div class="comic"><img src="assets/tiras/tira02.jpg" alt="Tira cómica Icedtooz #02"></div>
       <div class="comic"><img src="assets/tiras/tira03.jpg" alt="Tira cómica Icedtooz #03"></div>
-      <!-- Añadir más viñetas aquí -->
     </section>
 
     <section class="about">
@@ -290,7 +290,7 @@
         </form>
 
         <div class="contact-image">
-          <img src="assets/contact-image.jpg" alt="Imagen de contacto">
+          <img src="assets/icedtooz-handle.png" alt="Imagen de contacto">
         </div>
       </div>
 
