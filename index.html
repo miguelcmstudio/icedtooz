@@ -19,6 +19,10 @@
   <meta name="theme-color" content="#9cd3f7">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
 
+  <!-- Preconnect para YouTube (mejora performance al cargar thumbnails/API) -->
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link rel="preconnect" href="https://i.ytimg.com">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
   <style>
@@ -31,262 +35,133 @@
       font-display: swap;
     }
 
-    /* Aplicar Grafical como tipografía global */
-    :root {
-      --bg-color: #fdfefe;
-      --text-color: #222;
-      --accent: #0086ff;
-      --social-color: #24040e;
+    /* Variables */
+    :root{
+      --bg-color:#fdfefe;
+      --text-color:#222;
+      --accent:#0086ff;
+      --social-color:#24040e;
     }
 
-    html, body {
-      height: 100%;
-    }
-
-    body {
+    html,body{height:100%}
+    body{
       font-family: 'Grafical', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      scroll-behavior: smooth;
-      /* subtle cuadriculado celeste */
+      background-color:var(--bg-color);
+      color:var(--text-color);
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      scroll-behavior:smooth;
       background-image:
-        linear-gradient(to right, rgba(173, 216, 230, 0.4) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(173, 216, 230, 0.4) 1px, transparent 1px);
-      background-size: 24px 24px;
+        linear-gradient(to right,#9DDEFF 1px, transparent 1px),
+        linear-gradient(to bottom, #9DDEFF 1px, transparent 1px);
+      background-size:24px 24px;
     }
 
-    /* Asegurar que títulos y elementos hereden la fuente */
-    h1,h2,h3,p,a,input,textarea,button,li {
-      font-family: inherit;
+    h1,h2,h3,p,a,input,textarea,button,li{font-family:inherit}
+
+    header{ text-align:center; margin-top:2rem; padding:0 1rem }
+    #logo{ width:180px; height:180px; margin:0 auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)) }
+    header h1{ font-size:2rem; margin:0.6rem 0 0.3rem }
+    header p{ color:#555; margin:0 }
+
+    main{
+      width:100%;
+      max-width:1200px;
+      padding:2rem 1rem;
+      display:flex;
+      flex-direction:column;
+      gap:3rem;
+      box-sizing:border-box;
     }
 
-    header {
-      text-align: center;
-      margin-top: 2rem;
-      padding: 0 1rem;
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:1.5rem;
     }
 
-    #logo {
-      width: 180px;
-      height: 180px;
-      margin: 0 auto;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    .comic{
+      background:white;
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 4px 10px rgba(0,0,0,0.08);
+      transition:transform .2s ease;
+      cursor:pointer;
+    }
+    .comic:hover{ transform:translateY(-4px) }
+    .comic img{ width:100%; display:block; opacity:0; transform:translateY(20px); transition:opacity .5s, transform .5s }
+
+    section.about, section.contact{
+      text-align:left;
+      padding:2rem 1rem;
+      background-color:rgba(255,255,255,0.9);
+      border-radius:10px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+      max-width:1200px;
+      margin:0 auto;
     }
 
-    header h1 {
-      font-size: 2rem;
-      margin: 0.6rem 0 0.3rem;
-    }
+    /* Contact layout */
+    .contact-wrapper{ display:flex; gap:2rem; align-items:stretch; flex-wrap:wrap; margin-top:1rem }
+    .contact-wrapper form{ flex:1 1 420px; max-width:50%; display:flex; flex-direction:column; gap:1rem; box-sizing:border-box; justify-content:center }
+    .contact-image { flex:1 1 300px; max-width:50%; display:flex; align-items:center; justify-content:center }
+    .contact-image img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.12); display:block }
 
-    header p {
-      color: #555;
-      margin: 0;
+    .contact input[type="text"], .contact input[type="email"], .contact textarea {
+      padding:0.75rem; border-radius:8px; border:1px solid #d0dbe9; outline:none; transition:box-shadow .2s, border-color .2s; font-size:1rem; box-sizing:border-box;
     }
+    .contact input:focus, .contact textarea:focus { border-color:var(--accent); box-shadow:0 4px 14px rgba(13,110,255,0.12) }
+    .contact button { padding:0.8rem 1.25rem; border-radius:999px; border:none; background:var(--accent); color:#fff; cursor:pointer; font-size:1rem; align-self:start; transition:transform .15s, background .15s }
+    .contact button:hover { transform:translateY(-2px); background:#1d8ae0 }
 
-    main {
-      width: 100%;
-      max-width: 1200px;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 3rem;
-      box-sizing: border-box;
-    }
+    .socials{ margin-top:1.25rem; display:flex; gap:1rem; align-items:center }
+    .socials img{ width:28px; height:28px; display:block; transition:transform .15s, filter .15s; filter:none }
+    .socials img:hover{ transform:scale(1.08); filter:brightness(.9) saturate(1.2) }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .comic {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      transition: transform 0.2s ease;
-      cursor: pointer;
-    }
-
-    .comic:hover { transform: translateY(-4px); }
-
-    .comic img {
-      width: 100%;
-      height: auto;
-      display: block;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    section.about, section.contact {
-      text-align: left;
-      padding: 2rem 1rem;
-      background-color: rgba(255,255,255,0.9);
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    section.about h2, section.contact h2 {
-      margin-top: 0;
-    }
-
-    /* --------- Contact layout: 50% form + 50% square image --------- */
-    .contact {
-      font-family: inherit;
-    }
-
-    .contact-wrapper {
-      display: flex;
-      gap: 2rem;
-      align-items: stretch; /* fuerza misma altura */
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-
-    /* Form: 50% up to min width */
-    .contact-wrapper form {
-      flex: 1 1 420px;
-      max-width: 50%;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      box-sizing: border-box;
-      justify-content: center;
-    }
-
-    /* Image: 50% and 1:1 aspect */
-    .contact-wrapper .contact-image {
-      flex: 1 1 300px;
-      max-width: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .contact-wrapper .contact-image img {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      border-radius: 10px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-      display: block;
-    }
-
-    /* Inputs / textarea / button */
-    .contact input[type="text"],
-    .contact input[type="email"],
-    .contact textarea {
-      padding: 0.75rem;
-      border-radius: 8px;
-      border: 1px solid #d0dbe9;
-      outline: none;
-      transition: box-shadow .2s, border-color .2s;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-
-    .contact input:focus,
-    .contact textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 4px 14px rgba(13,110,255,0.12);
-    }
-
-    .contact button {
-      padding: 0.8rem 1.25rem;
-      border-radius: 999px;
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      cursor: pointer;
-      font-size: 1rem;
-      align-self: start;
-      transition: transform .15s ease, background .15s;
-    }
-
-    .contact button:hover { transform: translateY(-2px); background: #1d8ae0; }
-
-    /* Social icons use SVG files */
-    .socials {
-      margin-top: 1.25rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-    .socials a { display: inline-flex; align-items:center; justify-content:center; }
-    .socials img {
-      width: 28px;
-      height: 28px;
-      display: block;
-      transition: transform .15s ease, filter .15s ease;
-      filter: none;
-    }
-    .socials img:hover { transform: scale(1.08); filter: brightness(0.9) saturate(1.2); }
-
-    /* Back to top minimal */
-    #backToTop {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 36px;
-      height: 36px;
-      border: 2px solid var(--social-color);
-      border-radius: 50%;
-      background: transparent;
-      cursor: pointer;
-      z-index: 100;
-      opacity: 0.8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      visibility: hidden;
-    }
-    #backToTop:hover { transform: translateY(-2px); opacity: 1; }
+    #backToTop{ position:fixed; bottom:20px; right:20px; width:36px; height:36px; border:2px solid var(--social-color); border-radius:50%; background:transparent; cursor:pointer; z-index:100; opacity:.8; display:flex; align-items:center; justify-content:center; visibility:hidden }
+    #backToTop:hover{ transform:translateY(-2px); opacity:1 }
 
     /* Lightbox */
-    #lightbox {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity .25s ease, visibility .25s;
-      padding: 1rem;
-    }
-    #lightbox.visible { visibility: visible; opacity: 1; }
-    #lightbox img { max-width: 92%; max-height: 92%; border-radius: 10px; box-shadow: 0 6px 30px rgba(0,0,0,0.6); }
+    #lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.85); display:flex; justify-content:center; align-items:center; z-index:999; visibility:hidden; opacity:0; transition:opacity .25s, visibility .25s; padding:1rem }
+    #lightbox.visible{ visibility:visible; opacity:1 }
+    #lightbox img{ max-width:92%; max-height:92%; border-radius:10px; box-shadow:0 6px 30px rgba(0,0,0,.6) }
 
-    footer {
-      text-align: center;
-      padding: 1rem 1rem;
-      color: var(--social-color);
-      font-family: inherit;
-      font-size: 0.9rem;
-      width: 100%;
-      margin-top: 2rem;
-    }
+    footer{ text-align:center; padding:1rem 1rem; color:var(--social-color); font-family:inherit; font-size:.9rem; width:100%; margin-top:2rem }
 
-    /* Responsive: stack form and image on smaller screens */
-    @media (max-width: 980px) {
-      .contact-wrapper form,
-      .contact-wrapper .contact-image {
-        max-width: 100%;
-        flex-basis: 100%;
-      }
-      section.about, section.contact { text-align: left; padding: 1.5rem; }
-      header h1 { font-size: 1.6rem; }
+    @media(max-width:980px){ .contact-wrapper form, .contact-wrapper .contact-image { max-width:100%; flex-basis:100% } section.about, section.contact { text-align:left; padding:1.5rem } header h1{ font-size:1.6rem } }
+
+    /* -------------------- iPod player styles -------------------- */
+    .ipod {
+      width:320px;
+      max-width:95%;
+      margin: 1.5rem auto;
+      background: linear-gradient(180deg,#fafafa,#e9f6ff);
+      border-radius:18px;
+      box-shadow:0 12px 30px rgba(0,0,0,0.18);
+      padding:14px;
+      font-family:inherit;
     }
+    .ipod-screen {
+      border-radius:10px;
+      background:white;
+      padding:12px;
+      display:grid;
+      grid-template-columns:72px 1fr;
+      gap:12px;
+      align-items:center;
+    }
+    #ipod-cover { width:72px; height:72px; object-fit:cover; border-radius:6px; box-shadow:0 6px 14px rgba(0,0,0,.12) }
+    .track-info { text-align:left }
+    #track-title { font-weight:700; font-size:.95rem }
+    #track-artist { font-size:.85rem; color:#666; margin-top:4px }
+    #progress-wrap { height:6px; background:#f1f5fb; border-radius:999px; margin-top:12px; grid-column:1/-1; overflow:hidden }
+    #progress { height:100%; background:linear-gradient(90deg,var(--accent),#1d8ae0); width:0%; transition:width .2s linear }
+    .ipod-wheel { display:flex; justify-content:space-between; gap:8px; margin-top:12px }
+    .wheel-btn { flex:1; background:transparent; border:1px solid rgba(0,0,0,0.06); border-radius:8px; padding:8px; cursor:pointer }
+    .wheel-btn:active { transform:translateY(1px) }
+
   </style>
 </head>
 <body>
@@ -312,6 +187,34 @@
       <h2 id="about-title">about&nbsp;</h2>
       <p>Icedtooz es una tira cómica semanal con humor, aventuras y personajes originales. ¡Síguenos cada semana para nuevas historias!</p>
     </section>
+
+    <!-- ---------- iPod player integrado (inmediatamente antes del contacto) ---------- -->
+    <section aria-labelledby="music-title" style="max-width:1200px; margin:0 auto; padding:0 1rem;">
+      <h2 id="music-title" style="margin:0 0 .5rem 0;">Música</h2>
+
+      <div class="ipod" id="ipod">
+        <div class="ipod-screen">
+          <img id="ipod-cover" src="assets/ipod-placeholder-cover.jpg" alt="cover">
+          <div class="track-info">
+            <div id="track-title">Cargando playlist…</div>
+            <div id="track-artist">Icedtooz playlist</div>
+            <div id="progress-wrap"><div id="progress"></div></div>
+          </div>
+        </div>
+
+        <div class="ipod-wheel" style="margin-top:12px;">
+          <button id="ipod-prev" class="wheel-btn" aria-label="Anterior">◀</button>
+          <button id="ipod-play" class="wheel-btn" aria-label="Play/Pausa">▶</button>
+          <button id="ipod-next" class="wheel-btn" aria-label="Siguiente">▶▶</button>
+        </div>
+      </div>
+
+      <!-- hidden player container (YouTube IFrame will be created here) -->
+      <div id="player-container" style="display:none">
+        <div id="yt-player"></div>
+      </div>
+    </section>
+    <!-- ---------- end iPod ---------- -->
 
     <section class="contact" aria-labelledby="contact-title">
       <h2 id="contact-title">Deja aquí tus sugerencias, halagos o insultos ;)</h2>
@@ -376,7 +279,7 @@
       path: 'assets/logo.json'
     });
 
-    // Formulario contacto
+    // Formulario contacto (Formspree)
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.querySelector('.form-status');
 
@@ -415,7 +318,7 @@
 
     document.querySelectorAll('.comic').forEach(el => observer.observe(el));
 
-    // Back to top visibility and click
+    // Back to top
     const backToTop = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
       backToTop.style.visibility = window.scrollY > 200 ? 'visible' : 'hidden';
@@ -450,6 +353,156 @@
         lightbox.setAttribute('aria-hidden', 'true');
       }
     });
+
+    /* ================== iPod / YouTube playlist player ================== */
+
+    // Replace with your playlist ID (or leave to be replaced later)
+    const YT_PLAYLIST_ID = 'https://www.youtube.com/watch?v=nMvpzUNSlP8&list=PLThqpxAn2mQb819ObhwCG04zBZ2J77bS1';
+
+    // UI elements
+    const ipodPlayBtn = document.getElementById('ipod-play');
+    const ipodNextBtn = document.getElementById('ipod-next');
+    const ipodPrevBtn = document.getElementById('ipod-prev');
+    const ipodTitle = document.getElementById('track-title');
+    const ipodArtist = document.getElementById('track-artist');
+    const ipodCover = document.getElementById('ipod-cover');
+    const ipodProgress = document.getElementById('progress');
+
+    let YTplayer = null;
+    let isLoadingYT = false;
+    let queuedAction = null;
+    let progressInterval = null;
+    let isPlaying = false;
+
+    // Load YouTube IFrame API lazily and initialize player with playlist
+    async function ensureYT(action = null) {
+      if (YTplayer) { if (action) handleAction(action); return; }
+      if (isLoadingYT) { queuedAction = action; return; }
+
+      isLoadingYT = true;
+      queuedAction = action;
+
+      // load API
+      await new Promise((resolve) => {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+        window.onYouTubeIframeAPIReady = () => resolve();
+      });
+
+      // create invisible player
+      YTplayer = new YT.Player('yt-player', {
+        height: '0', width: '0',
+        playerVars: {
+          listType: 'playlist',
+          list: YT_PLAYLIST_ID,
+          controls: 0,
+          disablekb: 1,
+          rel: 0,
+          modestbranding: 1,
+          iv_load_policy: 3
+        },
+        events: {
+          onReady: (e) => {
+            isLoadingYT = false;
+            e.target.setVolume(80);
+            if (queuedAction) { handleAction(queuedAction); queuedAction = null; }
+            bindProgressUpdater();
+            // try to read current video data
+            setTimeout(syncUIWithPlayer, 300);
+          },
+          onStateChange: onYTStateChange
+        }
+      });
+    }
+
+    function handleAction(action){
+      if (!YTplayer) { queuedAction = action; return; }
+      switch(action) {
+        case 'playToggle':
+          if (isPlaying) { YTplayer.pauseVideo(); } else { YTplayer.playVideo(); }
+          break;
+        case 'next':
+          YTplayer.nextVideo();
+          break;
+        case 'prev':
+          YTplayer.previousVideo();
+          break;
+        case 'play':
+          YTplayer.playVideo();
+          break;
+        case 'pause':
+          YTplayer.pauseVideo();
+          break;
+      }
+    }
+
+    // Update UI with current video metadata if available
+    function syncUIWithPlayer(){
+      try {
+        const videoData = YTplayer.getVideoData(); // returns {title, video_id, author}
+        if (videoData && videoData.title) ipodTitle.textContent = videoData.title;
+        if (videoData && videoData.author) ipodArtist.textContent = videoData.author;
+        // attempt to set cover using video id (hqdefault)
+        if (videoData && videoData.video_id) {
+          ipodCover.src = `https://i.ytimg.com/vi/${videoData.video_id}/hqdefault.jpg`;
+        }
+      } catch (err) {
+        // player not ready/allowed yet
+      }
+    }
+
+    // Periodically update progress bar
+    function bindProgressUpdater(){
+      if (progressInterval) clearInterval(progressInterval);
+      progressInterval = setInterval(() => {
+        try {
+          const t = YTplayer.getCurrentTime();
+          const d = YTplayer.getDuration();
+          if (d && d > 0) {
+            const pct = Math.min(100, Math.round((t / d) * 100));
+            ipodProgress.style.width = pct + '%';
+          }
+        } catch (err) {}
+      }, 500);
+    }
+
+    function onYTStateChange(e){
+      // 0 ended, 1 playing, 2 paused
+      const state = e.data;
+      if (state === 1) {
+        isPlaying = true;
+        ipodPlayBtn.textContent = '⏸';
+        syncUIWithPlayer();
+      } else if (state === 2) {
+        isPlaying = false;
+        ipodPlayBtn.textContent = '▶';
+      } else if (state === 0) {
+        // ended: player will auto-advance to next in playlist
+        setTimeout(syncUIWithPlayer, 300);
+      }
+    }
+
+    // UI bindings
+    ipodPlayBtn.addEventListener('click', () => { ensureYT('playToggle'); });
+    ipodNextBtn.addEventListener('click', () => { ensureYT('next'); });
+    ipodPrevBtn.addEventListener('click', () => { ensureYT('prev'); });
+
+    // Also support keyboard: space toggles play/pause when focused anywhere
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        const active = document.activeElement;
+        // avoid interfering with form input typing
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+        e.preventDefault();
+        ensureYT('playToggle');
+      }
+    });
+
+    // Optional: if you want to prefetch playlist metadata (titles/thumbnails) you'll need
+    // to use YouTube Data API server-side (or GH Action) to avoid exposing your API key client-side.
+
+    /* =============== end iPod player =============== */
   </script>
 </body>
 </html>
