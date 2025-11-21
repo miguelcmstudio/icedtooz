@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-K85FBTFL');</script>
-<!-- End Google Tag Manager -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K85FBTFL');</script>
+  <!-- End Google Tag Manager -->
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Icedtooz — Tira Cómica Semanal</title>
   <meta name="description" content="Icedtooz, tira cómica semanal con humor y aventuras originales. Descubre nuevas tiras cada semana online.">
   <meta name="keywords" content="tira cómica, Icedtooz, cómic online, humor, webcomic, historias semanales">
   <meta name="author" content="@icedtooz">
-	<link rel="apple-touch-icon" href="assets/icons/favicon.png">
-<meta name="theme-color" content="#9cd3f7">
+  <link rel="apple-touch-icon" href="assets/icons/favicon.png">
+  <meta name="theme-color" content="#9cd3f7">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
   <style>
-    /* Tipografía personalizada Grafical */
+    /* ---------- Tipografía global: Grafical ---------- */
     @font-face {
       font-family: 'Grafical';
       src: url('assets/fonts/Grafical-Regular.woff') format('woff');
@@ -30,42 +31,55 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       font-display: swap;
     }
 
+    /* Aplicar Grafical como tipografía global */
+    :root {
+      --bg-color: #fdfefe;
+      --text-color: #222;
+      --accent: #0086ff;
+      --social-color: #24040e;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
     body {
-      font-family: 'Grafical';
-      src: url('assets/fonts/Grafical-Regular.woff') format('woff')
-      background-color: #fdfefe;
-      background-image: 
-        linear-gradient(to right, rgba(173, 216, 230, 0.4) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(173, 216, 230, 0.4) 1px, transparent 1px);
-      background-size: 24px 24px;
-      color: #222;
+      font-family: 'Grafical', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       scroll-behavior: smooth;
+      /* subtle cuadriculado celeste */
+      background-image:
+        linear-gradient(to right, rgba(173, 216, 230, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(173, 216, 230, 0.4) 1px, transparent 1px);
+      background-size: 24px 24px;
     }
 
-    h1, h2, h3 {
-      font-family: 'Grafical';
-      src: url('assets/fonts/Grafical-Regular.woff') format('woff')
+    /* Asegurar que títulos y elementos hereden la fuente */
+    h1,h2,h3,p,a,input,textarea,button,li {
+      font-family: inherit;
     }
 
     header {
       text-align: center;
       margin-top: 2rem;
+      padding: 0 1rem;
     }
 
     #logo {
       width: 180px;
       height: 180px;
-      margin: auto;
+      margin: 0 auto;
       filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
     }
 
     header h1 {
       font-size: 2rem;
-      margin-bottom: 0.5rem;
+      margin: 0.6rem 0 0.3rem;
     }
 
     header p {
@@ -80,6 +94,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       display: flex;
       flex-direction: column;
       gap: 3rem;
+      box-sizing: border-box;
     }
 
     .grid {
@@ -88,261 +103,264 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       gap: 1.5rem;
     }
 
-    .comic img {
-      width: 100%;
-      border-radius: 0.5rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    .comic {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
       cursor: pointer;
-      transition: transform 0.3s, opacity 0.5s;
-      opacity: 0;
-      transform: translateY(20px);
     }
 
-    .comic img:hover {
-      transform: scale(1.02);
+    .comic:hover { transform: translateY(-4px); }
+
+    .comic img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
     section.about, section.contact {
-      text-align: center;
+      text-align: left;
       padding: 2rem 1rem;
-      background-color: rgba(255,255,255,0.8);
+      background-color: rgba(255,255,255,0.9);
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    /* Contacto con imagen y formulario */
+    section.about h2, section.contact h2 {
+      margin-top: 0;
+    }
+
+    /* --------- Contact layout: 50% form + 50% square image --------- */
     .contact {
-      font-family: 'Grafical', sans-serif;
+      font-family: inherit;
     }
 
     .contact-wrapper {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: stretch;
       gap: 2rem;
+      align-items: stretch; /* fuerza misma altura */
+      flex-wrap: wrap;
       margin-top: 1rem;
     }
 
+    /* Form: 50% up to min width */
     .contact-wrapper form {
-      flex: 1 1 400px;
+      flex: 1 1 420px;
       max-width: 50%;
       display: flex;
       flex-direction: column;
+      gap: 1rem;
+      box-sizing: border-box;
       justify-content: center;
     }
 
+    /* Image: 50% and 1:1 aspect */
     .contact-wrapper .contact-image {
       flex: 1 1 300px;
       max-width: 50%;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
     }
 
     .contact-wrapper .contact-image img {
       width: 100%;
+      height: auto;
       aspect-ratio: 1 / 1;
       object-fit: cover;
       border-radius: 10px;
-      box-shadow: 0 0px 0px rgba(0,0,0,0);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      display: block;
     }
 
-    .contact form input,
-    .contact form textarea {
-      font-family: inherit;
-      width: 100%;
+    /* Inputs / textarea / button */
+    .contact input[type="text"],
+    .contact input[type="email"],
+    .contact textarea {
       padding: 0.75rem;
-      margin-bottom: 1rem;
       border-radius: 8px;
-      border: 1px solid #0086ff;
+      border: 1px solid #d0dbe9;
       outline: none;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      transition: box-shadow .2s, border-color .2s;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
 
-    .contact form input:focus,
-    .contact form textarea:focus {
-      border-color: #005fcc;
-      box-shadow: 0 0 5px rgba(0, 134, 255, 0.5);
+    .contact input:focus,
+    .contact textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(13,110,255,0.12);
     }
 
-    .contact form button {
-      font-family: inherit;
-      padding: 0.75rem 1.5rem;
+    .contact button {
+      padding: 0.8rem 1.25rem;
+      border-radius: 999px;
       border: none;
-      border-radius: 80px;
-      background-color: #0086ff;
+      background: var(--accent);
       color: #fff;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
+      font-size: 1rem;
+      align-self: start;
+      transition: transform .15s ease, background .15s;
     }
 
-    .contact form button:hover {
-      background-color: #005fcc;
-      transform: translateY(-2px);
-    }
+    .contact button:hover { transform: translateY(-2px); background: #1d8ae0; }
 
+    /* Social icons use SVG files */
     .socials {
+      margin-top: 1.25rem;
       display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-top: 1rem;
+      gap: 1rem;
+      align-items: center;
     }
-
-    .socials a {
-      text-decoration: none;
-      font-size: 1.5rem;
-      color: #24040e;
-      transition: color 0.3s;
+    .socials a { display: inline-flex; align-items:center; justify-content:center; }
+    .socials img {
+      width: 28px;
+      height: 28px;
+      display: block;
+      transition: transform .15s ease, filter .15s ease;
+      filter: none;
     }
+    .socials img:hover { transform: scale(1.08); filter: brightness(0.9) saturate(1.2); }
 
-    .socials a:hover {
-      color: #1da1f2;
-    }
-
+    /* Back to top minimal */
     #backToTop {
       position: fixed;
       bottom: 20px;
       right: 20px;
       width: 36px;
       height: 36px;
-      border: 2px solid #24040e;
+      border: 2px solid var(--social-color);
       border-radius: 50%;
       background: transparent;
       cursor: pointer;
       z-index: 100;
-      opacity: 0.7;
-      transition: opacity 0.3s, transform 0.3s;
-      visibility: hidden;
+      opacity: 0.8;
       display: flex;
       align-items: center;
       justify-content: center;
+      visibility: hidden;
     }
+    #backToTop:hover { transform: translateY(-2px); opacity: 1; }
 
-    #backToTop:hover {
-      opacity: 1;
-      transform: translateY(-2px);
-    }
-
-    #backToTop svg {
-      display: block;
-    }
-
+    /* Lightbox */
     #lightbox {
       position: fixed;
-      top:0; left:0; right:0; bottom:0;
-      background: rgba(0,0,0,0.8);
+      inset: 0;
+      background: rgba(0,0,0,0.85);
       display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 999;
       visibility: hidden;
       opacity: 0;
-      transition: opacity 0.3s;
-      z-index: 200;
+      transition: opacity .25s ease, visibility .25s;
+      padding: 1rem;
     }
-
-    #lightbox img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
-
-    #lightbox.visible {
-      visibility: visible;
-      opacity: 1;
-    }
+    #lightbox.visible { visibility: visible; opacity: 1; }
+    #lightbox img { max-width: 92%; max-height: 92%; border-radius: 10px; box-shadow: 0 6px 30px rgba(0,0,0,0.6); }
 
     footer {
       text-align: center;
-      padding: 1rem 0;
-      background-color: transparent;
-      color: #24040E;
-      font-family: 'Grafical', sans-serif;
+      padding: 1rem 1rem;
+      color: var(--social-color);
+      font-family: inherit;
       font-size: 0.9rem;
       width: 100%;
       margin-top: 2rem;
     }
 
-    @media(max-width : 998px ){
+    /* Responsive: stack form and image on smaller screens */
+    @media (max-width: 980px) {
       .contact-wrapper form,
       .contact-wrapper .contact-image {
         max-width: 100%;
+        flex-basis: 100%;
       }
+      section.about, section.contact { text-align: left; padding: 1.5rem; }
+      header h1 { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
-	<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K85FBTFL"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K85FBTFL"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
   <header>
-    <div id="logo"></div>
-    <h1>imaginemos cosas chingonas</h1>
+    <div id="logo" aria-hidden="true"></div>
+    <h1>dibujo porque me duele</h1>
     <p>todavía estamos terminando la web, pero ya nos puedes escribir&nbsp;</p>
   </header>
 
   <main>
-    <section class="grid">
+    <section class="grid" aria-label="Tiras">
       <div class="comic"><img src="assets/tiras/tira01.png" alt="Tira cómica Icedtooz #01"></div>
       <div class="comic"><img src="assets/tiras/tira02.png" alt="Tira cómica Icedtooz #02"></div>
       <div class="comic"><img src="assets/tiras/tira03.png" alt="Tira cómica Icedtooz #03"></div>
     </section>
 
-    <section class="about">
-      <h2>about&nbsp;</h2>
+    <section class="about" aria-labelledby="about-title">
+      <h2 id="about-title">about&nbsp;</h2>
       <p>Icedtooz es una tira cómica semanal con humor, aventuras y personajes originales. ¡Síguenos cada semana para nuevas historias!</p>
     </section>
 
-    <section class="contact">
-      <h2>Deja aquí tus sugerencias, halagos o insultos ;)</h2>
+    <section class="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Deja aquí tus sugerencias, halagos o insultos ;)</h2>
+
       <div class="contact-wrapper">
-        <form id="contactForm" action="https://formspree.io/f/xeovjaav" method="POST">
-          <input type="text" name="name" placeholder="¿Cómo te llamas?" required>
-          <input type="email" name="email" placeholder="Dinos tu email" required>
-          <textarea name="message" placeholder="Cuéntanos" required rows="5"></textarea>
+        <form id="contactForm" action="https://formspree.io/f/xeovjaav" method="POST" aria-label="Formulario de contacto">
+          <input type="text" name="name" placeholder="¿Cómo te llamas?" required aria-label="Nombre">
+          <input type="email" name="email" placeholder="Dinos tu email" required aria-label="Correo electrónico">
+          <textarea name="message" placeholder="Cuéntanos" required rows="5" aria-label="Mensaje"></textarea>
           <button type="submit">Enviar</button>
         </form>
 
-        <div class="contact-image">
+        <div class="contact-image" aria-hidden="true">
           <img src="assets/icedtooz-handle.png" alt="Imagen de contacto">
         </div>
       </div>
 
-      <p class="form-status" style="margin-top:1rem; color:green;"></p>
+      <p class="form-status" style="margin-top:1rem; color:green;" aria-live="polite"></p>
 
-    <div class="socials">
-  <a href="https://instagram.com/icedtooz" target="_blank" aria-label="Instagram">
-    <img src="assets/icons/instagram.svg" alt="Instagram">
-  </a>
-  <a href="https://icedtooz.bsky.social/" target="_blank" aria-label="Bluesky">
-  <img src="assets/icons/bluesky.svg" alt="X (Twitter)">
-  </a>
-  <a href="https://tiktok.com/@icedtooz" target="_blank" aria-label="TikTok">
-    <img src="assets/icons/tiktok.svg" alt="TikTok">
-  </a>
-  <a href="https://facebook.com/icedtooz" target="_blank" aria-label="Facebook">
-    <img src="assets/icons/facebook.svg" alt="Facebook">
-  </a>
-	<a href="https://youtube.com/@icedtooz" target="_blank" aria-label="YouTube">
-    <img src="assets/icons/youtube.svg" alt="YouTube">
-  </a>
-   	<a href="https://x.com/icedtooz" target="_blank" aria-label="X">
-    <img src="assets/icons/x.svg" alt="X (Twitter)">
-	</a>	
-</div>
-
+      <div class="socials" aria-label="Redes sociales">
+        <a href="https://instagram.com/icedtooz" target="_blank" aria-label="Instagram">
+          <img src="assets/icons/instagram.svg" alt="Instagram">
+        </a>
+        <a href="https://icedtooz.bsky.social/" target="_blank" aria-label="Bluesky">
+          <img src="assets/icons/bluesky.svg" alt="Bluesky">
+        </a>
+        <a href="https://tiktok.com/@icedtooz" target="_blank" aria-label="TikTok">
+          <img src="assets/icons/tiktok.svg" alt="TikTok">
+        </a>
+        <a href="https://facebook.com/icedtooz" target="_blank" aria-label="Facebook">
+          <img src="assets/icons/facebook.svg" alt="Facebook">
+        </a>
+        <a href="https://youtube.com/@icedtooz" target="_blank" aria-label="YouTube">
+          <img src="assets/icons/youtube.svg" alt="YouTube">
+        </a>
+        <a href="https://x.com/icedtooz" target="_blank" aria-label="X">
+          <img src="assets/icons/x.svg" alt="X">
+        </a>
+      </div>
     </section>
-</main>
+  </main>
 
   <footer>
     icedtooz 2025 © Todos los derechos reservados
   </footer>
 
-  <div id="lightbox"><img src="" alt="Tira ampliada"></div>
+  <div id="lightbox" role="dialog" aria-hidden="true"><img src="" alt="Tira ampliada"></div>
 
-  <button id="backToTop" aria-label="Volver arriba">
+  <button id="backToTop" aria-label="Volver arriba" title="Volver arriba" aria-hidden="true">
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M6 0 L6 12 M0 6 L6 0 L12 6" stroke="#222" stroke-width="2"/>
     </svg>
@@ -382,41 +400,55 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
 
-    // Scroll fade-in
+    // Scroll fade-in for comics
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.querySelector('img').style.opacity = 1;
-          entry.target.querySelector('img').style.transform = 'translateY(0)';
+          const img = entry.target.querySelector('img');
+          if (img) {
+            img.style.opacity = 1;
+            img.style.transform = 'translateY(0)';
+          }
         }
       });
     }, { threshold: 0.2 });
 
     document.querySelectorAll('.comic').forEach(el => observer.observe(el));
 
-    // Back to top
+    // Back to top visibility and click
     const backToTop = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
       backToTop.style.visibility = window.scrollY > 200 ? 'visible' : 'hidden';
     });
     backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
 
-    // Lightbox
+    // Lightbox open/close with zoom animation
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = lightbox.querySelector('img');
+
     document.querySelectorAll('.comic img').forEach(img => {
       img.addEventListener('click', () => {
         lightboxImg.src = img.src;
         lightbox.classList.add('visible');
+        lightbox.style.visibility = 'visible';
+        lightbox.setAttribute('aria-hidden', 'false');
       });
     });
 
     lightbox.addEventListener('click', (e) => {
-      if(e.target === lightbox) lightbox.classList.remove('visible');
+      if (e.target === lightbox) {
+        lightbox.classList.remove('visible');
+        lightbox.style.visibility = 'hidden';
+        lightbox.setAttribute('aria-hidden', 'true');
+      }
     });
 
     window.addEventListener('keydown', (e) => {
-      if(e.code === 'Space') lightbox.classList.remove('visible');
+      if (e.code === 'Space') {
+        lightbox.classList.remove('visible');
+        lightbox.style.visibility = 'hidden';
+        lightbox.setAttribute('aria-hidden', 'true');
+      }
     });
   </script>
 </body>
