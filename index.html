@@ -356,33 +356,54 @@
 
     /* ================== iPod / YouTube playlist player ================== */
 
-    // Replace with your playlist ID (or leave to be replaced later)
-    const YT_PLAYLIST_ID = 'https://www.youtube.com/watch?v=nMvpzUNSlP8&list=PLThqpxAn2mQb819ObhwCG04zBZ2J77bS1';
+      // Default fallback (solo se usará si no hay data/playlist.json)
+  let DEFAULT_YT_PLAYLIST_ID = 'https://www.youtube.com/watch?v=nMvpzUNSlP8&list=PLThqpxAn2mQb819ObhwCG04zBZ2J77bS1';
 
-    // UI elements
-    const ipodPlayBtn = document.getElementById('ipod-play');
-    const ipodNextBtn = document.getElementById('ipod-next');
-    const ipodPrevBtn = document.getElementById('ipod-prev');
-    const ipodTitle = document.getElementById('track-title');
-    const ipodArtist = document.getElementById('track-artist');
-    const ipodCover = document.getElementById('ipod-cover');
-    const ipodProgress = document.getElementById('progress');
+  // UI elements
+  const ipodPlayBtn = document.getElementById('ipod-play');
+  const ipodNextBtn = document.getElementById('ipod-next');
+  const ipodPrevBtn = document.getElementById('ipod-prev');
+  const ipodTitle = document.getElementById('track-title');
+  const ipodArtist = document.getElementById('track-artist');
+  const ipodCover = document.getElementById('ipod-cover');
+  const ipodProgress = document.getElementById('progress');
 
-    let YTplayer = null;
-    let isLoadingYT = false;
-    let queuedAction = null;
-    let progressInterval = null;
-    let isPlaying = false;
-	  
-	      // Playlist source: can be a string (playlistId) or an array of videoIds
-    let currentPlaylistSource = null;
+  // Player state
+  let YTplayer = null;
+  let isLoadingYT = false;
+  let queuedAction = null;
+  let progressInterval = null;
+  let isPlaying = false;
 
-    // Try to load data/playlist.json to initialize UI + playlist source
-    async function loadLocalPlaylistJSON(){
+  // Playlist source: can be a string (playlistId) or an array of videoIds
+  let currentPlaylistSource = null;
+
+  // We'll keep the loaded JSON here for fallbacks
+  let localPlaylistData = null;
+
+  // Change player container to be "present" so API initializes reliably.
+  // Replace display:none with tiny invisible box (CSS tweak via JS)
+  const playerContainer = document.getElementById('player-container');
+  if (playerContainer) {
+    playerContainer.style.display = 'block';
+    playerContainer.style.position = 'absolute';
+    playerContainer.style.left = '-9999px';
+    playerContainer.style.width = '1px';
+    playerContainer.style.height = '1px';
+    playerContainer.style.overflow = 'hidden';
+    playerContainer.setAttribute('aria-hidden', 'true');
+  }
+
+  // Promise that resolves when playlist JSON load completes (success or fail)
+  let localPlaylistLoadedPromise = null;
+  function loadLocalPlaylistJSON(){
+    if (localPlaylistLoadedPromise) return localPlaylistLoadedPromise;
+    localPlaylistLoadedPromise = (async () => {
       try {
         const res = await fetch('data/playlist.json', {cache: "no-store"});
         if (!res.ok) throw new Error('no local playlist.json');
         const data = await res.json();
+        localPlaylistData = data;
         // Set UI: playlist title and first-item cover if available
         if (data.title) ipodArtist.textContent = data.title;
         if (Array.isArray(data.items) && data.items.length > 0) {
@@ -392,73 +413,107 @@
         }
         // Determine playlist source
         if (data.playlistId || data.listId || data.id) {
-          // possible keys where a playlist id might be stored
           currentPlaylistSource = (data.playlistId || data.listId || data.id).toString();
           console.log('Using playlistId from data/playlist.json:', currentPlaylistSource);
         } else if (Array.isArray(data.items) && data.items.length > 0) {
-          // collect video ids
-          const ids = data.items.map(it => it.id).filter(Boolean);
+          const ids = data.items.map(it => it.id || it.videoId || it.video_id).filter(Boolean);
           if (ids.length) {
             currentPlaylistSource = ids;
             console.log('Using video id array from data/playlist.json, length:', ids.length);
           }
         }
+        return true;
       } catch (err) {
-        console.info('No local playlist.json found or failed to parse; using default playlist ID. Error:', err.message);
+        console.info('No local playlist.json found or failed to parse; will fallback. Error:', err.message);
         // fallback: try to extract playlist id from DEFAULT_YT_PLAYLIST_ID string if present
         const match = DEFAULT_YT_PLAYLIST_ID.match(/[?&]list=([^&]+)/);
         if (match && match[1]) currentPlaylistSource = match[1];
         else currentPlaylistSource = DEFAULT_YT_PLAYLIST_ID;
+        return false;
       }
-    }
+    })();
+    return localPlaylistLoadedPromise;
+  }
 
-    // Load the JSON immediately (non-blocking)
-    loadLocalPlaylistJSON();
+  // Kick off loading immediately
+  loadLocalPlaylistJSON();
 
-    // Load YouTube IFrame API lazily and initialize player with playlist
-    async function ensureYT(action = null) {
-      if (YTplayer) { if (action) handleAction(action); return; }
-      if (isLoadingYT) { queuedAction = action; return; }
+  // Load YouTube IFrame API lazily and initialize player with playlist
+  async function ensureYT(action = null) {
+    // Wait until local playlist JSON load finishes (so we know currentPlaylistSource)
+    await loadLocalPlaylistJSON();
 
-      isLoadingYT = true;
-      queuedAction = action;
+    if (YTplayer) { if (action) handleAction(action); return; }
+    if (isLoadingYT) { queuedAction = action; return; }
 
-      // load API
-      await new Promise((resolve) => {
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.head.appendChild(tag);
-        window.onYouTubeIframeAPIReady = () => resolve();
-      });
+    isLoadingYT = true;
+    queuedAction = action;
 
-      // create invisible player
-      YTplayer = new YT.Player('yt-player', {
-        height: '0', width: '0',
-        playerVars: {
-          listType: 'playlist',
-          list: YT_PLAYLIST_ID,
-          controls: 0,
-          disablekb: 1,
-          rel: 0,
-          modestbranding: 1,
-          iv_load_policy: 3
-        },
-        events: {
-          onReady: (e) => {
-            isLoadingYT = false;
-            e.target.setVolume(80);
-            if (queuedAction) { handleAction(queuedAction); queuedAction = null; }
-            bindProgressUpdater();
-            // try to read current video data
-            setTimeout(syncUIWithPlayer, 300);
-          },
-          onStateChange: onYTStateChange
+    // load API
+    await new Promise((resolve) => {
+      if (window.YT && window.YT.Player) return resolve();
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+      window.onYouTubeIframeAPIReady = () => resolve();
+      // safety: if API fails to load in 8s, resolve anyway
+      setTimeout(() => {
+        if (!window.YT) {
+          console.warn('YouTube IFrame API did not load within 8s (continuing, may fail).');
         }
-      });
-    }
+        resolve();
+      }, 8000);
+    });
 
-    function handleAction(action){
-      if (!YTplayer) { queuedAction = action; return; }
+    // create invisible/small player (1x1) so API reports metadata correctly
+    YTplayer = new YT.Player('yt-player', {
+      height: '1', width: '1',
+      playerVars: {
+        controls: 0,
+        disablekb: 1,
+        rel: 0,
+        modestbranding: 1,
+        iv_load_policy: 3
+      },
+      events: {
+        onReady: (e) => {
+          isLoadingYT = false;
+          try { e.target.setVolume(80); } catch(e){console.warn(e)}
+          // Decide how to load playlist depending on currentPlaylistSource type
+          try {
+            if (typeof currentPlaylistSource === 'string') {
+              const listMatch = currentPlaylistSource.match(/[?&]list=([^&]+)/);
+              const playlistId = listMatch ? listMatch[1] : currentPlaylistSource;
+              e.target.loadPlaylist({playlist: playlistId, index: 0, startSeconds: 0});
+              console.log('YT: loadPlaylist by playlistId', playlistId);
+            } else if (Array.isArray(currentPlaylistSource)) {
+              e.target.loadPlaylist({playlist: currentPlaylistSource, index: 0, startSeconds: 0});
+              console.log('YT: loadPlaylist with array of ids, count=', currentPlaylistSource.length);
+            } else {
+              // fallback from DEFAULT
+              const match = DEFAULT_YT_PLAYLIST_ID.match(/[?&]list=([^&]+)/);
+              if (match && match[1]) {
+                e.target.loadPlaylist({playlist: match[1]});
+                console.log('YT: fallback loadPlaylist with default list id', match[1]);
+              }
+            }
+          } catch (err) {
+            console.warn('Error while attempting to load playlist:', err);
+          }
+
+          if (queuedAction) { handleAction(queuedAction); queuedAction = null; }
+          bindProgressUpdater();
+          // try to read current video data after a short delay
+          setTimeout(syncUIWithPlayer, 350);
+        },
+        onStateChange: onYTStateChange
+      }
+    });
+  }
+
+  function handleAction(action){
+    if (!YTplayer) { queuedAction = action; ensureYT(); return; }
+    try {
       switch(action) {
         case 'playToggle':
           if (isPlaying) { YTplayer.pauseVideo(); } else { YTplayer.playVideo(); }
@@ -476,74 +531,95 @@
           YTplayer.pauseVideo();
           break;
       }
-    }
+    } catch (err) { console.error('handleAction failed:', err); }
+  }
 
-    // Update UI with current video metadata if available
-    function syncUIWithPlayer(){
+  // Update UI with current video metadata if available, with multiple fallbacks
+  function syncUIWithPlayer(){
+    try {
+      const videoData = YTplayer.getVideoData(); // {title, video_id, author}
+      if (videoData && videoData.title) ipodTitle.textContent = videoData.title;
+      if (videoData && videoData.author) ipodArtist.textContent = videoData.author;
+
+      // 1) prefer video_id from getVideoData
+      if (videoData && videoData.video_id) {
+        ipodCover.src = `https://i.ytimg.com/vi/${videoData.video_id}/hqdefault.jpg`;
+        return;
+      }
+
+      // 2) if we have localPlaylistData and an items array, try to use current index
       try {
-        const videoData = YTplayer.getVideoData(); // returns {title, video_id, author}
-        if (videoData && videoData.title) ipodTitle.textContent = videoData.title;
-        if (videoData && videoData.author) ipodArtist.textContent = videoData.author;
-        // attempt to set cover using video id (hqdefault)
-        if (videoData && videoData.video_id) {
-          ipodCover.src = `https://i.ytimg.com/vi/${videoData.video_id}/hqdefault.jpg`;
+        const idx = YTplayer.getPlaylistIndex ? YTplayer.getPlaylistIndex() : 0;
+        if (localPlaylistData && Array.isArray(localPlaylistData.items) && localPlaylistData.items[idx]) {
+          const it = localPlaylistData.items[idx];
+          if (it.thumbnail) { ipodCover.src = it.thumbnail; return; }
+          if (it.id) { ipodCover.src = `https://i.ytimg.com/vi/${it.id}/hqdefault.jpg`; return; }
         }
-      } catch (err) {
-        // player not ready/allowed yet
-      }
+      } catch(e){ /* ignore */ }
+
+      // 3) fallback: try getPlaylist() + playlistIndex to deduce id
+      try {
+        const pl = YTplayer.getPlaylist && YTplayer.getPlaylist();
+        const idx2 = (YTplayer.getPlaylistIndex && YTplayer.getPlaylistIndex()) || 0;
+        if (Array.isArray(pl) && pl[idx2]) {
+          ipodCover.src = `https://i.ytimg.com/vi/${pl[idx2]}/hqdefault.jpg`;
+          return;
+        }
+      } catch(e){ /* ignore */ }
+
+      // 4) nothing available — keep placeholder
+    } catch (err) {
+      // player not ready/allowed yet
     }
+  }
 
-    // Periodically update progress bar
-    function bindProgressUpdater(){
-      if (progressInterval) clearInterval(progressInterval);
-      progressInterval = setInterval(() => {
-        try {
-          const t = YTplayer.getCurrentTime();
-          const d = YTplayer.getDuration();
-          if (d && d > 0) {
-            const pct = Math.min(100, Math.round((t / d) * 100));
-            ipodProgress.style.width = pct + '%';
-          }
-        } catch (err) {}
-      }, 500);
+  // Periodically update progress bar
+  function bindProgressUpdater(){
+    if (progressInterval) clearInterval(progressInterval);
+    progressInterval = setInterval(() => {
+      try {
+        const t = YTplayer.getCurrentTime();
+        const d = YTplayer.getDuration();
+        if (d && d > 0) {
+          const pct = Math.min(100, Math.round((t / d) * 100));
+          ipodProgress.style.width = pct + '%';
+        }
+      } catch (err) {}
+    }, 500);
+  }
+
+  function onYTStateChange(e){
+    // 0 ended, 1 playing, 2 paused
+    const state = e.data;
+    if (state === 1) {
+      isPlaying = true;
+      ipodPlayBtn.textContent = '⏸';
+      syncUIWithPlayer();
+    } else if (state === 2) {
+      isPlaying = false;
+      ipodPlayBtn.textContent = '▶';
+    } else if (state === 0) {
+      // ended: player will auto-advance to next in playlist
+      setTimeout(syncUIWithPlayer, 300);
     }
+  }
 
-    function onYTStateChange(e){
-      // 0 ended, 1 playing, 2 paused
-      const state = e.data;
-      if (state === 1) {
-        isPlaying = true;
-        ipodPlayBtn.textContent = '⏸';
-        syncUIWithPlayer();
-      } else if (state === 2) {
-        isPlaying = false;
-        ipodPlayBtn.textContent = '▶';
-      } else if (state === 0) {
-        // ended: player will auto-advance to next in playlist
-        setTimeout(syncUIWithPlayer, 300);
-      }
+  // UI bindings (they will call ensureYT which now waits the JSON load)
+  ipodPlayBtn.addEventListener('click', () => { ensureYT('playToggle'); });
+  ipodNextBtn.addEventListener('click', () => { ensureYT('next'); });
+  ipodPrevBtn.addEventListener('click', () => { ensureYT('prev'); });
+
+  // Also support keyboard: space toggles play/pause when focused anywhere
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      e.preventDefault();
+      ensureYT('playToggle');
     }
+  });
 
-    // UI bindings
-    ipodPlayBtn.addEventListener('click', () => { ensureYT('playToggle'); });
-    ipodNextBtn.addEventListener('click', () => { ensureYT('next'); });
-    ipodPrevBtn.addEventListener('click', () => { ensureYT('prev'); });
-
-    // Also support keyboard: space toggles play/pause when focused anywhere
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        const active = document.activeElement;
-        // avoid interfering with form input typing
-        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
-        e.preventDefault();
-        ensureYT('playToggle');
-      }
-    });
-
-    // Optional: if you want to prefetch playlist metadata (titles/thumbnails) you'll need
-    // to use YouTube Data API server-side (or GH Action) to avoid exposing your API key client-side.
-
-    /* =============== end iPod player =============== */
-  </script>
+  // ---------- Fin parche iPod / YouTube ----------
+</script>
 </body>
 </html>
