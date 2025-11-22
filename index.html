@@ -373,6 +373,47 @@
     let queuedAction = null;
     let progressInterval = null;
     let isPlaying = false;
+	  
+	      // Playlist source: can be a string (playlistId) or an array of videoIds
+    let currentPlaylistSource = null;
+
+    // Try to load data/playlist.json to initialize UI + playlist source
+    async function loadLocalPlaylistJSON(){
+      try {
+        const res = await fetch('data/playlist.json', {cache: "no-store"});
+        if (!res.ok) throw new Error('no local playlist.json');
+        const data = await res.json();
+        // Set UI: playlist title and first-item cover if available
+        if (data.title) ipodArtist.textContent = data.title;
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          const first = data.items[0];
+          if (first.thumbnail) ipodCover.src = first.thumbnail;
+          if (first.title) ipodTitle.textContent = first.title;
+        }
+        // Determine playlist source
+        if (data.playlistId || data.listId || data.id) {
+          // possible keys where a playlist id might be stored
+          currentPlaylistSource = (data.playlistId || data.listId || data.id).toString();
+          console.log('Using playlistId from data/playlist.json:', currentPlaylistSource);
+        } else if (Array.isArray(data.items) && data.items.length > 0) {
+          // collect video ids
+          const ids = data.items.map(it => it.id).filter(Boolean);
+          if (ids.length) {
+            currentPlaylistSource = ids;
+            console.log('Using video id array from data/playlist.json, length:', ids.length);
+          }
+        }
+      } catch (err) {
+        console.info('No local playlist.json found or failed to parse; using default playlist ID. Error:', err.message);
+        // fallback: try to extract playlist id from DEFAULT_YT_PLAYLIST_ID string if present
+        const match = DEFAULT_YT_PLAYLIST_ID.match(/[?&]list=([^&]+)/);
+        if (match && match[1]) currentPlaylistSource = match[1];
+        else currentPlaylistSource = DEFAULT_YT_PLAYLIST_ID;
+      }
+    }
+
+    // Load the JSON immediately (non-blocking)
+    loadLocalPlaylistJSON();
 
     // Load YouTube IFrame API lazily and initialize player with playlist
     async function ensureYT(action = null) {
