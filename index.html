@@ -19,14 +19,13 @@
   <meta name="theme-color" content="#9cd3f7">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
 
-  <!-- Preconnect para YouTube -->
   <link rel="preconnect" href="https://www.youtube.com">
   <link rel="preconnect" href="https://i.ytimg.com">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
   <style>
-    /* ---------- Tipografía global: Grafical ---------- */
+    /* ---------- Tipografía global ---------- */
     @font-face {
       font-family: 'Grafical';
       src: url('assets/fonts/Grafical-Regular.woff') format('woff');
@@ -129,34 +128,76 @@
 
     @media(max-width:980px){ .contact-wrapper form, .contact-wrapper .contact-image { max-width:100%; flex-basis:100% } section.about, section.contact { text-align:left; padding:1.5rem } header h1{ font-size:1.6rem } }
 
-    .ipod {
-      width:320px;
+    /* ---------- iPod realista con rueda giratoria ---------- */
+    .ipod-real {
+      width: 320px;
       max-width:95%;
       margin: 1.5rem auto;
       background: linear-gradient(180deg,#fafafa,#e9f6ff);
-      border-radius:18px;
+      border-radius:30px;
       box-shadow:0 12px 30px rgba(0,0,0,0.18);
-      padding:14px;
       font-family:inherit;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:14px;
     }
+
     .ipod-screen {
-      border-radius:10px;
+      width:100%;
       background:white;
+      border-radius:20px;
       padding:12px;
-      display:grid;
-      grid-template-columns:72px 1fr;
+      display:flex;
       gap:12px;
       align-items:center;
+      box-shadow:0 4px 14px rgba(0,0,0,0.1);
     }
-    #ipod-cover { width:72px; height:72px; object-fit:cover; border-radius:6px; box-shadow:0 6px 14px rgba(0,0,0,.12) }
-    .track-info { text-align:left }
-    #track-title { font-weight:700; font-size:.95rem }
-    #track-artist { font-size:.85rem; color:#666; margin-top:4px }
-    #progress-wrap { height:6px; background:#f1f5fb; border-radius:999px; margin-top:12px; grid-column:1/-1; overflow:hidden }
+
+    #ipod-cover {
+      width:72px; height:72px;
+      border-radius:12px;
+      object-fit:cover;
+      box-shadow:0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .track-info { flex:1; display:flex; flex-direction:column; }
+    #track-title { font-weight:700; font-size:0.95rem }
+    #track-artist { font-size:0.85rem; color:#666; margin-top:4px }
+    #progress-wrap { height:6px; background:#f1f5fb; border-radius:999px; margin-top:12px; overflow:hidden }
     #progress { height:100%; background:linear-gradient(90deg,var(--accent),#1d8ae0); width:0%; transition:width .2s linear }
-    .ipod-wheel { display:flex; justify-content:space-between; gap:8px; margin-top:12px }
-    .wheel-btn { flex:1; background:transparent; border:1px solid rgba(0,0,0,0.06); border-radius:8px; padding:8px; cursor:pointer }
-    .wheel-btn:active { transform:translateY(1px) }
+
+    .ipod-wheel {
+      margin-top:14px;
+      width:180px;
+      height:180px;
+      background:#e0e0e0;
+      border-radius:50%;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:inset 0 4px 10px rgba(0,0,0,0.1),0 4px 14px rgba(0,0,0,0.15);
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .wheel-btn {
+      position:absolute;
+      width:50px;
+      height:30px;
+      background:transparent;
+      border:none;
+      font-size:1rem;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    #ipod-menu { top:10px; left:50%; transform:translateX(-50%) }
+    #ipod-prev { left:10px; top:50%; transform:translateY(-50%) }
+    #ipod-play { bottom:10px; left:50%; transform:translateX(-50%) }
+    #ipod-next { right:10px; top:50%; transform:translateY(-50%) }
+    .wheel-btn:active { transform:translateY(1px); }
   </style>
 </head>
 <body>
@@ -183,13 +224,13 @@
       <p>Icedtooz es una tira cómica semanal con humor, aventuras y personajes originales. ¡Síguenos cada semana para nuevas historias!</p>
     </section>
 
-    <!-- iPod player integrado -->
+    <!-- ---------- iPod con rueda giratoria y YouTube ---------- -->
     <section aria-labelledby="music-title" style="max-width:1200px; margin:0 auto; padding:0 1rem;">
       <h2 id="music-title" style="margin:0 0 .5rem 0;">Música</h2>
 
-      <div class="ipod" id="ipod">
+      <div class="ipod-real" id="ipod">
         <div class="ipod-screen">
-          <img id="ipod-cover" src="assets/ipod-placeholder-cover.jpg" alt="cover">
+          <img id="ipod-cover" src="assets/ipod-placeholder-cover.jpg" alt="Portada canción">
           <div class="track-info">
             <div id="track-title">Cargando playlist…</div>
             <div id="track-artist">Icedtooz playlist</div>
@@ -197,13 +238,17 @@
           </div>
         </div>
 
-        <div class="ipod-wheel" style="margin-top:12px;">
+        <div class="ipod-wheel" id="ipod-wheel">
+          <button id="ipod-menu" class="wheel-btn" aria-label="Menú">≡</button>
           <button id="ipod-prev" class="wheel-btn" aria-label="Anterior">◀</button>
           <button id="ipod-play" class="wheel-btn" aria-label="Play/Pausa">▶</button>
           <button id="ipod-next" class="wheel-btn" aria-label="Siguiente">▶▶</button>
         </div>
       </div>
-      <div id="player-container" style="display:none"><div id="yt-player"></div></div>
+
+      <div id="player-container" style="display:none">
+        <div id="yt-player"></div>
+      </div>
     </section>
 
     <section class="contact" aria-labelledby="contact-title">
@@ -260,7 +305,7 @@
   </button>
 
   <script>
-    // Lottie logo
+    // ---------- Lottie Logo ----------
     lottie.loadAnimation({
       container: document.getElementById('logo'),
       renderer: 'svg',
@@ -269,9 +314,10 @@
       path: 'assets/logo.json'
     });
 
-    // Formulario contacto
+    // ---------- Formspree ----------
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.querySelector('.form-status');
+
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(contactForm);
@@ -290,38 +336,34 @@
       }
     });
 
-    // Scroll fade-in for comics
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target.querySelector('img');
-          if (img) { img.style.opacity = 1; img.style.transform = 'translateY(0)'; }
-        }
-      });
-    }, { threshold: 0.2 });
-    document.querySelectorAll('.comic').forEach(el => observer.observe(el));
-
-    // Back to top
-    const backToTop = document.getElementById('backToTop');
-    window.addEventListener('scroll', () => { backToTop.style.visibility = window.scrollY > 200 ? 'visible' : 'hidden'; });
-    backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
-
-    // Lightbox
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = lightbox.querySelector('img');
-    document.querySelectorAll('.comic img').forEach(img => {
-      img.addEventListener('click', () => {
-        lightboxImg.src = img.src;
-        lightbox.classList.add('visible');
-        lightbox.style.visibility = 'visible';
-        lightbox.setAttribute('aria-hidden', 'false');
-      });
+    // ---------- Comics Fade-in ----------
+    document.addEventListener('DOMContentLoaded',()=>{
+      const comics=document.querySelectorAll('.comic img');
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.style.opacity=1;
+            entry.target.style.transform="translateY(0)";
+          }
+        });
+      }, { threshold: 0.1 });
+      comics.forEach(img=>observer.observe(img));
     });
-    lightbox.addEventListener('click', (e) => { if(e.target===lightbox){ lightbox.classList.remove('visible'); lightbox.style.visibility='hidden'; lightbox.setAttribute('aria-hidden','true'); }});
-    window.addEventListener('keydown', (e) => { if(e.code==='Space'){ lightbox.classList.remove('visible'); lightbox.style.visibility='hidden'; lightbox.setAttribute('aria-hidden','true'); }});
 
-    // ================= iPod / YouTube Player =================
-    const DEFAULT_YT_PLAYLIST_ID = 'PLThqpxAn2mQb819ObhwCG04zBZ2J77bS1';
+    // ---------- Lightbox ----------
+    const lightbox = document.getElementById('lightbox');
+    document.querySelectorAll('.comic img').forEach(img=>{
+      img.addEventListener('click',()=>{ lightbox.querySelector('img').src=img.src; lightbox.classList.add('visible'); lightbox.setAttribute('aria-hidden','false') });
+    });
+    lightbox.addEventListener('click',()=>{ lightbox.classList.remove('visible'); lightbox.setAttribute('aria-hidden','true') });
+
+    // ---------- Back to Top ----------
+    const backToTop=document.getElementById('backToTop');
+    window.addEventListener('scroll',()=>{ backToTop.style.visibility=(window.scrollY>400)?'visible':'hidden' });
+    backToTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+    // ---------- iPod YouTube Player ----------
+    let DEFAULT_YT_PLAYLIST_ID = 'PLThqpxAn2mQb819ObhwCG04zBZ2J77bS1';
     const ipodPlayBtn = document.getElementById('ipod-play');
     const ipodNextBtn = document.getElementById('ipod-next');
     const ipodPrevBtn = document.getElementById('ipod-prev');
@@ -329,21 +371,45 @@
     const ipodArtist = document.getElementById('track-artist');
     const ipodCover = document.getElementById('ipod-cover');
     const ipodProgress = document.getElementById('progress');
-    let YTplayer=null, isPlaying=false, progressInterval=null;
 
-    function ensureYT(action=null){
-      if(YTplayer){ if(action) handleAction(action); return; }
-      const tag=document.createElement('script');
-      tag.src="https://www.youtube.com/iframe_api";
-      document.head.appendChild(tag);
-      window.onYouTubeIframeAPIReady=()=>{
-        YTplayer=new YT.Player('yt-player',{height:'1',width:'1',playerVars:{controls:0,disablekb:1,rel:0,modestbranding:1,iv_load_policy:3},
-        events:{onReady:(e)=>{e.target.setVolume(80); e.target.loadPlaylist({playlist:DEFAULT_YT_PLAYLIST_ID, index:0}); bindProgressUpdater(); syncUIWithPlayer(); if(action) handleAction(action);}, onStateChange:onYTStateChange}});
-      };
+    let YTplayer = null;
+    let isPlaying = false;
+    let progressInterval = null;
+
+    function loadYT() {
+      if (window.YT && window.YT.Player) initPlayer();
+      else {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(tag);
+        window.onYouTubeIframeAPIReady = initPlayer;
+      }
+    }
+
+    function initPlayer() {
+      YTplayer = new YT.Player('yt-player', {
+        height:'1', width:'1',
+        playerVars:{controls:0,disablekb:1,rel:0,modestbranding:1,iv_load_policy:3,listType:'playlist',list:DEFAULT_YT_PLAYLIST_ID},
+        events:{
+          onReady:(e)=>{
+            e.target.setVolume(80);
+            updateTrackInfo();
+            bindProgress();
+          },
+          onStateChange:onYTStateChange
+        }
+      });
+    }
+
+    function onYTStateChange(e){
+      const state = e.data;
+      if(state===1){ isPlaying=true; ipodPlayBtn.textContent='⏸'; updateTrackInfo(); }
+      else if(state===2){ isPlaying=false; ipodPlayBtn.textContent='▶'; }
+      else if(state===0){ setTimeout(updateTrackInfo,300); }
     }
 
     function handleAction(action){
-      if(!YTplayer){ ensureYT(action); return; }
+      if(!YTplayer) { loadYT(); setTimeout(()=>handleAction(action),500); return; }
       switch(action){
         case 'playToggle': isPlaying?YTplayer.pauseVideo():YTplayer.playVideo(); break;
         case 'next': YTplayer.nextVideo(); break;
@@ -351,35 +417,62 @@
       }
     }
 
-    function syncUIWithPlayer(){
-      try{
-        const d=YTplayer.getVideoData();
-        if(d){ ipodTitle.textContent=d.title||ipodTitle.textContent; ipodArtist.textContent=d.author||ipodArtist.textContent; ipodCover.src=`https://i.ytimg.com/vi/${d.video_id||''}/hqdefault.jpg`; }
-      }catch(e){}
+    function updateTrackInfo(){
+      if(!YTplayer) return;
+      try {
+        const data = YTplayer.getVideoData();
+        if(data.title) ipodTitle.textContent = data.title;
+        if(data.author) ipodArtist.textContent = data.author;
+        if(data.video_id) ipodCover.src = `https://i.ytimg.com/vi/${data.video_id}/hqdefault.jpg`;
+      } catch(e){}
     }
 
-    function bindProgressUpdater(){
+    function bindProgress(){
       if(progressInterval) clearInterval(progressInterval);
-      progressInterval=setInterval(()=>{
+      progressInterval = setInterval(()=>{
         try{
           const t=YTplayer.getCurrentTime();
           const d=YTplayer.getDuration();
-          if(d>0){ ipodProgress.style.width=Math.min(100, Math.round((t/d)*100))+'%'; }
-        }catch(e){}
+          if(d>0) ipodProgress.style.width=Math.min(100,Math.round((t/d)*100))+'%';
+        } catch(e){}
       },500);
     }
 
-    function onYTStateChange(e){
-      const state=e.data;
-      if(state===1){ isPlaying=true; ipodPlayBtn.textContent='⏸'; syncUIWithPlayer(); }
-      else if(state===2){ isPlaying=false; ipodPlayBtn.textContent='▶'; }
-      else if(state===0){ setTimeout(syncUIWithPlayer,300); }
-    }
+    ipodPlayBtn.addEventListener('click',()=>handleAction('playToggle'));
+    ipodNextBtn.addEventListener('click',()=>handleAction('next'));
+    ipodPrevBtn.addEventListener('click',()=>handleAction('prev'));
 
-    ipodPlayBtn.addEventListener('click',()=>ensureYT('playToggle'));
-    ipodNextBtn.addEventListener('click',()=>ensureYT('next'));
-    ipodPrevBtn.addEventListener('click',()=>ensureYT('prev'));
-    window.addEventListener('keydown',(e)=>{ if(e.code==='Space'){ const a=document.activeElement; if(a&&['INPUT','TEXTAREA'].includes(a.tagName)) return; e.preventDefault(); ensureYT('playToggle'); }});
+    // ---------- Rueda giratoria ----------
+    const wheel = document.getElementById('ipod-wheel');
+    let startAngle=null;
+    wheel.addEventListener('pointerdown',e=>{
+      const rect=wheel.getBoundingClientRect();
+      const cx=rect.left+rect.width/2;
+      const cy=rect.top+rect.height/2;
+      const x=e.clientX-cx;
+      const y=e.clientY-cy;
+      startAngle=Math.atan2(y,x);
+      wheel.setPointerCapture(e.pointerId);
+    });
+
+    wheel.addEventListener('pointermove',e=>{
+      if(startAngle===null) return;
+      const rect=wheel.getBoundingClientRect();
+      const cx=rect.left+rect.width/2;
+      const cy=rect.top+rect.height/2;
+      const x=e.clientX-cx;
+      const y=e.clientY-cy;
+      const currentAngle=Math.atan2(y,x);
+      const diff=(currentAngle-startAngle)*(180/Math.PI);
+      if(diff>15) handleAction('next');
+      if(diff<-15) handleAction('prev');
+      startAngle=currentAngle;
+    });
+
+    wheel.addEventListener('pointerup',e=>{ startAngle=null; });
+    wheel.addEventListener('pointerleave',e=>{ startAngle=null; });
+
+    loadYT();
   </script>
 </body>
 </html>
