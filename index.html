@@ -19,7 +19,7 @@
   <meta name="theme-color" content="#9cd3f7">
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
 
-  <!-- Preconnect para YouTube (mejora performance al cargar thumbnails/API) -->
+  <!-- Preconnect para YouTube -->
   <link rel="preconnect" href="https://www.youtube.com">
   <link rel="preconnect" href="https://i.ytimg.com">
 
@@ -35,7 +35,6 @@
       font-display: swap;
     }
 
-    /* Variables */
     :root{
       --bg-color:#fdfefe;
       --text-color:#222;
@@ -103,7 +102,6 @@
       margin:0 auto;
     }
 
-    /* Contact layout */
     .contact-wrapper{ display:flex; gap:2rem; align-items:stretch; flex-wrap:wrap; margin-top:1rem }
     .contact-wrapper form{ flex:1 1 420px; max-width:50%; display:flex; flex-direction:column; gap:1rem; box-sizing:border-box; justify-content:center }
     .contact-image { flex:1 1 300px; max-width:50%; display:flex; align-items:center; justify-content:center }
@@ -123,7 +121,6 @@
     #backToTop{ position:fixed; bottom:20px; right:20px; width:36px; height:36px; border:2px solid var(--social-color); border-radius:50%; background:transparent; cursor:pointer; z-index:100; opacity:.8; display:flex; align-items:center; justify-content:center; visibility:hidden }
     #backToTop:hover{ transform:translateY(-2px); opacity:1 }
 
-    /* Lightbox */
     #lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.85); display:flex; justify-content:center; align-items:center; z-index:999; visibility:hidden; opacity:0; transition:opacity .25s, visibility .25s; padding:1rem }
     #lightbox.visible{ visibility:visible; opacity:1 }
     #lightbox img{ max-width:92%; max-height:92%; border-radius:10px; box-shadow:0 6px 30px rgba(0,0,0,.6) }
@@ -132,7 +129,6 @@
 
     @media(max-width:980px){ .contact-wrapper form, .contact-wrapper .contact-image { max-width:100%; flex-basis:100% } section.about, section.contact { text-align:left; padding:1.5rem } header h1{ font-size:1.6rem } }
 
-    /* -------------------- iPod player styles -------------------- */
     .ipod {
       width:320px;
       max-width:95%;
@@ -161,7 +157,6 @@
     .ipod-wheel { display:flex; justify-content:space-between; gap:8px; margin-top:12px }
     .wheel-btn { flex:1; background:transparent; border:1px solid rgba(0,0,0,0.06); border-radius:8px; padding:8px; cursor:pointer }
     .wheel-btn:active { transform:translateY(1px) }
-
   </style>
 </head>
 <body>
@@ -188,7 +183,7 @@
       <p>Icedtooz es una tira cómica semanal con humor, aventuras y personajes originales. ¡Síguenos cada semana para nuevas historias!</p>
     </section>
 
-    <!-- ---------- iPod player integrado (inmediatamente antes del contacto) ---------- -->
+    <!-- iPod player integrado -->
     <section aria-labelledby="music-title" style="max-width:1200px; margin:0 auto; padding:0 1rem;">
       <h2 id="music-title" style="margin:0 0 .5rem 0;">Música</h2>
 
@@ -208,13 +203,8 @@
           <button id="ipod-next" class="wheel-btn" aria-label="Siguiente">▶▶</button>
         </div>
       </div>
-
-      <!-- hidden player container (YouTube IFrame will be created here) -->
-      <div id="player-container" style="display:none">
-        <div id="yt-player"></div>
-      </div>
+      <div id="player-container" style="display:none"><div id="yt-player"></div></div>
     </section>
-    <!-- ---------- end iPod ---------- -->
 
     <section class="contact" aria-labelledby="contact-title">
       <h2 id="contact-title">Deja aquí tus sugerencias, halagos o insultos ;)</h2>
@@ -279,20 +269,17 @@
       path: 'assets/logo.json'
     });
 
-    // Formulario contacto (Formspree)
+    // Formulario contacto
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.querySelector('.form-status');
-
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(contactForm);
-
       const response = await fetch(contactForm.action, {
         method: contactForm.method,
         body: formData,
         headers: {'Accept': 'application/json'}
       });
-
       if (response.ok) {
         formStatus.textContent = "¡Mensaje enviado! Gracias por contactarnos.";
         contactForm.reset();
@@ -308,27 +295,20 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const img = entry.target.querySelector('img');
-          if (img) {
-            img.style.opacity = 1;
-            img.style.transform = 'translateY(0)';
-          }
+          if (img) { img.style.opacity = 1; img.style.transform = 'translateY(0)'; }
         }
       });
     }, { threshold: 0.2 });
-
     document.querySelectorAll('.comic').forEach(el => observer.observe(el));
 
     // Back to top
     const backToTop = document.getElementById('backToTop');
-    window.addEventListener('scroll', () => {
-      backToTop.style.visibility = window.scrollY > 200 ? 'visible' : 'hidden';
-    });
+    window.addEventListener('scroll', () => { backToTop.style.visibility = window.scrollY > 200 ? 'visible' : 'hidden'; });
     backToTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
 
-    // Lightbox open/close with zoom animation
+    // Lightbox
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = lightbox.querySelector('img');
-
     document.querySelectorAll('.comic img').forEach(img => {
       img.addEventListener('click', () => {
         lightboxImg.src = img.src;
@@ -337,289 +317,69 @@
         lightbox.setAttribute('aria-hidden', 'false');
       });
     });
+    lightbox.addEventListener('click', (e) => { if(e.target===lightbox){ lightbox.classList.remove('visible'); lightbox.style.visibility='hidden'; lightbox.setAttribute('aria-hidden','true'); }});
+    window.addEventListener('keydown', (e) => { if(e.code==='Space'){ lightbox.classList.remove('visible'); lightbox.style.visibility='hidden'; lightbox.setAttribute('aria-hidden','true'); }});
 
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        lightbox.classList.remove('visible');
-        lightbox.style.visibility = 'hidden';
-        lightbox.setAttribute('aria-hidden', 'true');
-      }
-    });
+    // ================= iPod / YouTube Player =================
+    const DEFAULT_YT_PLAYLIST_ID = 'PLThqpxAn2mQb819ObhwCG04zBZ2J77bS1';
+    const ipodPlayBtn = document.getElementById('ipod-play');
+    const ipodNextBtn = document.getElementById('ipod-next');
+    const ipodPrevBtn = document.getElementById('ipod-prev');
+    const ipodTitle = document.getElementById('track-title');
+    const ipodArtist = document.getElementById('track-artist');
+    const ipodCover = document.getElementById('ipod-cover');
+    const ipodProgress = document.getElementById('progress');
+    let YTplayer=null, isPlaying=false, progressInterval=null;
 
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        lightbox.classList.remove('visible');
-        lightbox.style.visibility = 'hidden';
-        lightbox.setAttribute('aria-hidden', 'true');
-      }
-    });
-
-    /* ================== iPod / YouTube playlist player ================== */
-
-      // Default fallback (solo se usará si no hay data/playlist.json)
-  let DEFAULT_YT_PLAYLIST_ID = 'https://www.youtube.com/watch?v=nMvpzUNSlP8&list=PLThqpxAn2mQb819ObhwCG04zBZ2J77bS1';
-
-  // UI elements
-  const ipodPlayBtn = document.getElementById('ipod-play');
-  const ipodNextBtn = document.getElementById('ipod-next');
-  const ipodPrevBtn = document.getElementById('ipod-prev');
-  const ipodTitle = document.getElementById('track-title');
-  const ipodArtist = document.getElementById('track-artist');
-  const ipodCover = document.getElementById('ipod-cover');
-  const ipodProgress = document.getElementById('progress');
-
-  // Player state
-  let YTplayer = null;
-  let isLoadingYT = false;
-  let queuedAction = null;
-  let progressInterval = null;
-  let isPlaying = false;
-
-  // Playlist source: can be a string (playlistId) or an array of videoIds
-  let currentPlaylistSource = null;
-
-  // We'll keep the loaded JSON here for fallbacks
-  let localPlaylistData = null;
-
-  // Change player container to be "present" so API initializes reliably.
-  // Replace display:none with tiny invisible box (CSS tweak via JS)
-  const playerContainer = document.getElementById('player-container');
-  if (playerContainer) {
-    playerContainer.style.display = 'block';
-    playerContainer.style.position = 'absolute';
-    playerContainer.style.left = '-9999px';
-    playerContainer.style.width = '1px';
-    playerContainer.style.height = '1px';
-    playerContainer.style.overflow = 'hidden';
-    playerContainer.setAttribute('aria-hidden', 'true');
-  }
-
-  // Promise that resolves when playlist JSON load completes (success or fail)
-  let localPlaylistLoadedPromise = null;
-  function loadLocalPlaylistJSON(){
-    if (localPlaylistLoadedPromise) return localPlaylistLoadedPromise;
-    localPlaylistLoadedPromise = (async () => {
-      try {
-        const res = await fetch('data/playlist.json', {cache: "no-store"});
-        if (!res.ok) throw new Error('no local playlist.json');
-        const data = await res.json();
-        localPlaylistData = data;
-        // Set UI: playlist title and first-item cover if available
-        if (data.title) ipodArtist.textContent = data.title;
-        if (Array.isArray(data.items) && data.items.length > 0) {
-          const first = data.items[0];
-          if (first.thumbnail) ipodCover.src = first.thumbnail;
-          if (first.title) ipodTitle.textContent = first.title;
-        }
-        // Determine playlist source
-        if (data.playlistId || data.listId || data.id) {
-          currentPlaylistSource = (data.playlistId || data.listId || data.id).toString();
-          console.log('Using playlistId from data/playlist.json:', currentPlaylistSource);
-        } else if (Array.isArray(data.items) && data.items.length > 0) {
-          const ids = data.items.map(it => it.id || it.videoId || it.video_id).filter(Boolean);
-          if (ids.length) {
-            currentPlaylistSource = ids;
-            console.log('Using video id array from data/playlist.json, length:', ids.length);
-          }
-        }
-        return true;
-      } catch (err) {
-        console.info('No local playlist.json found or failed to parse; will fallback. Error:', err.message);
-        // fallback: try to extract playlist id from DEFAULT_YT_PLAYLIST_ID string if present
-        const match = DEFAULT_YT_PLAYLIST_ID.match(/[?&]list=([^&]+)/);
-        if (match && match[1]) currentPlaylistSource = match[1];
-        else currentPlaylistSource = DEFAULT_YT_PLAYLIST_ID;
-        return false;
-      }
-    })();
-    return localPlaylistLoadedPromise;
-  }
-
-  // Kick off loading immediately
-  loadLocalPlaylistJSON();
-
-  // Load YouTube IFrame API lazily and initialize player with playlist
-  async function ensureYT(action = null) {
-    // Wait until local playlist JSON load finishes (so we know currentPlaylistSource)
-    await loadLocalPlaylistJSON();
-
-    if (YTplayer) { if (action) handleAction(action); return; }
-    if (isLoadingYT) { queuedAction = action; return; }
-
-    isLoadingYT = true;
-    queuedAction = action;
-
-    // load API
-    await new Promise((resolve) => {
-      if (window.YT && window.YT.Player) return resolve();
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
+    function ensureYT(action=null){
+      if(YTplayer){ if(action) handleAction(action); return; }
+      const tag=document.createElement('script');
+      tag.src="https://www.youtube.com/iframe_api";
       document.head.appendChild(tag);
-      window.onYouTubeIframeAPIReady = () => resolve();
-      // safety: if API fails to load in 8s, resolve anyway
-      setTimeout(() => {
-        if (!window.YT) {
-          console.warn('YouTube IFrame API did not load within 8s (continuing, may fail).');
-        }
-        resolve();
-      }, 8000);
-    });
-
-    // create invisible/small player (1x1) so API reports metadata correctly
-    YTplayer = new YT.Player('yt-player', {
-      height: '1', width: '1',
-      playerVars: {
-        controls: 0,
-        disablekb: 1,
-        rel: 0,
-        modestbranding: 1,
-        iv_load_policy: 3
-      },
-      events: {
-        onReady: (e) => {
-          isLoadingYT = false;
-          try { e.target.setVolume(80); } catch(e){console.warn(e)}
-          // Decide how to load playlist depending on currentPlaylistSource type
-          try {
-            if (typeof currentPlaylistSource === 'string') {
-              const listMatch = currentPlaylistSource.match(/[?&]list=([^&]+)/);
-              const playlistId = listMatch ? listMatch[1] : currentPlaylistSource;
-              e.target.loadPlaylist({playlist: playlistId, index: 0, startSeconds: 0});
-              console.log('YT: loadPlaylist by playlistId', playlistId);
-            } else if (Array.isArray(currentPlaylistSource)) {
-              e.target.loadPlaylist({playlist: currentPlaylistSource, index: 0, startSeconds: 0});
-              console.log('YT: loadPlaylist with array of ids, count=', currentPlaylistSource.length);
-            } else {
-              // fallback from DEFAULT
-              const match = DEFAULT_YT_PLAYLIST_ID.match(/[?&]list=([^&]+)/);
-              if (match && match[1]) {
-                e.target.loadPlaylist({playlist: match[1]});
-                console.log('YT: fallback loadPlaylist with default list id', match[1]);
-              }
-            }
-          } catch (err) {
-            console.warn('Error while attempting to load playlist:', err);
-          }
-
-          if (queuedAction) { handleAction(queuedAction); queuedAction = null; }
-          bindProgressUpdater();
-          // try to read current video data after a short delay
-          setTimeout(syncUIWithPlayer, 350);
-        },
-        onStateChange: onYTStateChange
-      }
-    });
-  }
-
-  function handleAction(action){
-    if (!YTplayer) { queuedAction = action; ensureYT(); return; }
-    try {
-      switch(action) {
-        case 'playToggle':
-          if (isPlaying) { YTplayer.pauseVideo(); } else { YTplayer.playVideo(); }
-          break;
-        case 'next':
-          YTplayer.nextVideo();
-          break;
-        case 'prev':
-          YTplayer.previousVideo();
-          break;
-        case 'play':
-          YTplayer.playVideo();
-          break;
-        case 'pause':
-          YTplayer.pauseVideo();
-          break;
-      }
-    } catch (err) { console.error('handleAction failed:', err); }
-  }
-
-  // Update UI with current video metadata if available, with multiple fallbacks
-  function syncUIWithPlayer(){
-    try {
-      const videoData = YTplayer.getVideoData(); // {title, video_id, author}
-      if (videoData && videoData.title) ipodTitle.textContent = videoData.title;
-      if (videoData && videoData.author) ipodArtist.textContent = videoData.author;
-
-      // 1) prefer video_id from getVideoData
-      if (videoData && videoData.video_id) {
-        ipodCover.src = `https://i.ytimg.com/vi/${videoData.video_id}/hqdefault.jpg`;
-        return;
-      }
-
-      // 2) if we have localPlaylistData and an items array, try to use current index
-      try {
-        const idx = YTplayer.getPlaylistIndex ? YTplayer.getPlaylistIndex() : 0;
-        if (localPlaylistData && Array.isArray(localPlaylistData.items) && localPlaylistData.items[idx]) {
-          const it = localPlaylistData.items[idx];
-          if (it.thumbnail) { ipodCover.src = it.thumbnail; return; }
-          if (it.id) { ipodCover.src = `https://i.ytimg.com/vi/${it.id}/hqdefault.jpg`; return; }
-        }
-      } catch(e){ /* ignore */ }
-
-      // 3) fallback: try getPlaylist() + playlistIndex to deduce id
-      try {
-        const pl = YTplayer.getPlaylist && YTplayer.getPlaylist();
-        const idx2 = (YTplayer.getPlaylistIndex && YTplayer.getPlaylistIndex()) || 0;
-        if (Array.isArray(pl) && pl[idx2]) {
-          ipodCover.src = `https://i.ytimg.com/vi/${pl[idx2]}/hqdefault.jpg`;
-          return;
-        }
-      } catch(e){ /* ignore */ }
-
-      // 4) nothing available — keep placeholder
-    } catch (err) {
-      // player not ready/allowed yet
+      window.onYouTubeIframeAPIReady=()=>{
+        YTplayer=new YT.Player('yt-player',{height:'1',width:'1',playerVars:{controls:0,disablekb:1,rel:0,modestbranding:1,iv_load_policy:3},
+        events:{onReady:(e)=>{e.target.setVolume(80); e.target.loadPlaylist({playlist:DEFAULT_YT_PLAYLIST_ID, index:0}); bindProgressUpdater(); syncUIWithPlayer(); if(action) handleAction(action);}, onStateChange:onYTStateChange}});
+      };
     }
-  }
 
-  // Periodically update progress bar
-  function bindProgressUpdater(){
-    if (progressInterval) clearInterval(progressInterval);
-    progressInterval = setInterval(() => {
-      try {
-        const t = YTplayer.getCurrentTime();
-        const d = YTplayer.getDuration();
-        if (d && d > 0) {
-          const pct = Math.min(100, Math.round((t / d) * 100));
-          ipodProgress.style.width = pct + '%';
-        }
-      } catch (err) {}
-    }, 500);
-  }
-
-  function onYTStateChange(e){
-    // 0 ended, 1 playing, 2 paused
-    const state = e.data;
-    if (state === 1) {
-      isPlaying = true;
-      ipodPlayBtn.textContent = '⏸';
-      syncUIWithPlayer();
-    } else if (state === 2) {
-      isPlaying = false;
-      ipodPlayBtn.textContent = '▶';
-    } else if (state === 0) {
-      // ended: player will auto-advance to next in playlist
-      setTimeout(syncUIWithPlayer, 300);
+    function handleAction(action){
+      if(!YTplayer){ ensureYT(action); return; }
+      switch(action){
+        case 'playToggle': isPlaying?YTplayer.pauseVideo():YTplayer.playVideo(); break;
+        case 'next': YTplayer.nextVideo(); break;
+        case 'prev': YTplayer.previousVideo(); break;
+      }
     }
-  }
 
-  // UI bindings (they will call ensureYT which now waits the JSON load)
-  ipodPlayBtn.addEventListener('click', () => { ensureYT('playToggle'); });
-  ipodNextBtn.addEventListener('click', () => { ensureYT('next'); });
-  ipodPrevBtn.addEventListener('click', () => { ensureYT('prev'); });
-
-  // Also support keyboard: space toggles play/pause when focused anywhere
-  window.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-      const active = document.activeElement;
-      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
-      e.preventDefault();
-      ensureYT('playToggle');
+    function syncUIWithPlayer(){
+      try{
+        const d=YTplayer.getVideoData();
+        if(d){ ipodTitle.textContent=d.title||ipodTitle.textContent; ipodArtist.textContent=d.author||ipodArtist.textContent; ipodCover.src=`https://i.ytimg.com/vi/${d.video_id||''}/hqdefault.jpg`; }
+      }catch(e){}
     }
-  });
 
-  // ---------- Fin parche iPod / YouTube ----------
-</script>
+    function bindProgressUpdater(){
+      if(progressInterval) clearInterval(progressInterval);
+      progressInterval=setInterval(()=>{
+        try{
+          const t=YTplayer.getCurrentTime();
+          const d=YTplayer.getDuration();
+          if(d>0){ ipodProgress.style.width=Math.min(100, Math.round((t/d)*100))+'%'; }
+        }catch(e){}
+      },500);
+    }
+
+    function onYTStateChange(e){
+      const state=e.data;
+      if(state===1){ isPlaying=true; ipodPlayBtn.textContent='⏸'; syncUIWithPlayer(); }
+      else if(state===2){ isPlaying=false; ipodPlayBtn.textContent='▶'; }
+      else if(state===0){ setTimeout(syncUIWithPlayer,300); }
+    }
+
+    ipodPlayBtn.addEventListener('click',()=>ensureYT('playToggle'));
+    ipodNextBtn.addEventListener('click',()=>ensureYT('next'));
+    ipodPrevBtn.addEventListener('click',()=>ensureYT('prev'));
+    window.addEventListener('keydown',(e)=>{ if(e.code==='Space'){ const a=document.activeElement; if(a&&['INPUT','TEXTAREA'].includes(a.tagName)) return; e.preventDefault(); ensureYT('playToggle'); }});
+  </script>
 </body>
 </html>
