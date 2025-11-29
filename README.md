@@ -105,18 +105,3 @@ Ejemplo de estructura:
     }
   ]
 }
-
-# Viñeta del día — Hosting para widget
-
-
-## Subir a GitHub (pasos rápidos)
-
-
-1. Crea un repo en GitHub (por ejemplo `vignette-widget-repo`).
-2. En tu máquina local, crea la carpeta y añade los archivos:
-
-
-```bash
-mkdir vignette-widget-repo
-cd vignette-widget-repo
-# copia aquí images.json y la carpeta images/
