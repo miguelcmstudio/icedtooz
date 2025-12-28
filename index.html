@@ -215,6 +215,119 @@
 		  .panorama{ height:60vh }
 		  #about-page .about-header{ padding-bottom:0.5rem }
 		}
+		  
+	/* =========================
+   DARK MODE AUTOMÁTICO
+   ========================= */
+@media (prefers-color-scheme: dark) {
+
+  :root{
+    --bg-color:#0086FF;
+    --text-color:#FFFFFF;
+    --accent:#FFFFFF;
+    --social-color:#FFFFFF;
+  }
+
+  body{
+    background-color:var(--bg-color);
+    color:var(--text-color);
+    background-image:
+      linear-gradient(to right, #02AFFF 1px, transparent 1px),
+      linear-gradient(to bottom, #02AFFF 1px, transparent 1px);
+  }
+
+  /* Texto secundario */
+  header p,
+  section.about p{
+    color:rgba(255,255,255,0.85);
+  }
+
+  /* Menú superior */
+  .top-menu{
+    background:rgba(0,134,255,0.9);
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  }
+
+  .top-menu a{
+    color:#FFFFFF;
+  }
+
+  .top-menu a:hover{
+    background:rgba(255,255,255,0.15);
+  }
+
+  /* Tarjetas de cómic */
+  .comic{
+    background:#0086FF;
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  }
+
+  /* Secciones con fondo blanco */
+  section.about,
+  .contact{
+    background:rgba(0,134,255,0.95);
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  }
+
+  /* Formularios */
+  .contact input,
+  .contact textarea{
+    background:rgba(255,255,255,0.12);
+    border-color:rgba(255,255,255,0.35);
+    color:#FFFFFF;
+  }
+
+  .contact input::placeholder,
+  .contact textarea::placeholder{
+    color:rgba(255,255,255,0.7);
+  }
+
+  .contact input:focus,
+  .contact textarea:focus{
+    border-color:#FFFFFF;
+    box-shadow:0 4px 14px rgba(255,255,255,0.25);
+  }
+
+  .contact button{
+    background:#FFFFFF;
+    color:#0086FF;
+  }
+
+  .contact button:hover{
+    background:#E6F4FF;
+  }
+
+  /* Footer */
+  footer{
+    color:#FFFFFF;
+  }
+
+  /* Back to top */
+  #backToTop{
+    border-color:#FFFFFF;
+  }
+
+  #backToTop svg path{
+    stroke:#FFFFFF;
+  }
+
+  /* About overlay */
+  #about-page{
+    background:#0086FF;
+    color:#FFFFFF;
+  }
+
+  #about-page .close-about{
+    border-color:rgba(255,255,255,0.5);
+    color:#FFFFFF;
+  }
+
+  /* Scrollbar panorama */
+  .panorama::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,0.4);
+  }
+}
+
 	  </style>
 </head>
 <body>
