@@ -12,562 +12,223 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Icedtooz — Tira Cómica Semanal</title>
-  <meta name="description" content="Icedtooz, tira cómica de frecuena al menos semanal. Descubre nuevas tiras cada semana online.">
-  <meta name="keywords" content="tira cómica, Icedtooz, cómic online, humor, webcomic, historias semanales">
-  <meta name="author" content="@icedtooz">
-  <link rel="apple-touch-icon" href="assets/icons/favicon.png">
-  <meta name="theme-color" content="#9cd3f7">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-
-  <link rel="preconnect" href="https://www.youtube.com">
-  <link rel="preconnect" href="https://i.ytimg.com">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 
-	  <style>
-		@font-face {
-		  font-family: 'Grafical';
-		  src: url('assets/fonts/Grafical-Regular.woff') format('woff');
-		  font-weight: normal;
-		  font-style: normal;
-		  font-display: swap;
-		}
+  <style>
+    @font-face {
+      font-family: 'Grafical';
+      src: url('assets/fonts/Grafical-Regular.woff') format('woff');
+      font-display: swap;
+    }
 
-		:root{
-		  --bg-color:#fdfefe;
-		  --text-color:#222;
-		  --accent:#0086ff;
-		  --social-color:#24040e;
-		}
+    :root{
+      --bg-color:#fdfefe;
+      --text-color:#222;
+      --accent:#0086ff;
+    }
 
-		html,body{height:100%}
-		body{
-		  font-family: 'Grafical', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-		  background-color:var(--bg-color);
-		  color:var(--text-color);
-		  margin:0;
-		  display:flex;
-		  flex-direction:column;
-		  align-items:center;
-		  scroll-behavior:smooth;
-		  background-image:
-			linear-gradient(to right,#9DDEFF 1px, transparent 1px),
-			linear-gradient(to bottom, #9DDEFF 1px, transparent 1px);
-		  background-size:24px 24px;
-		}
+    html,body{height:100%}
+    body{
+      font-family:'Grafical',system-ui;
+      margin:0;
+      background:var(--bg-color);
+      color:var(--text-color);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      scroll-behavior:smooth;
+      background-image:
+        linear-gradient(to right,#9DDEFF 1px, transparent 1px),
+        linear-gradient(to bottom,#9DDEFF 1px, transparent 1px);
+      background-size:24px 24px;
+    }
 
-		h1,h2,h3,p,a,input,textarea,button,li{font-family:inherit}
+    /* MENU */
+    .top-menu{
+      position:fixed;
+      top:16px;
+      right:16px;
+      z-index:1200;
+      background:rgba(255,255,255,.9);
+      border-radius:10px;
+      padding:6px;
+      display:flex;
+      gap:6px;
+      box-shadow:0 6px 18px rgba(0,0,0,.08);
+    }
+    .top-menu a{
+      text-decoration:none;
+      color:inherit;
+      padding:8px 10px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .top-menu a:hover{background:rgba(0,134,255,.1)}
 
-		/* Top-right fixed menu */
-		.top-menu{
-		  position:fixed;
-		  top:16px;
-		  right:16px;
-		  z-index:1200;
-		  background:rgba(255,255,255,0.9);
-		  border-radius:10px;
-		  padding:6px;
-		  display:flex;
-		  gap:6px;
-		  align-items:center;
-		  box-shadow:0 6px 18px rgba(0,0,0,0.08);
-		  backdrop-filter: blur(4px);
-		}
-		.top-menu a{
-		  display:inline-flex;
-		  align-items:center;
-		  gap:8px;
-		  padding:8px 10px;
-		  border-radius:8px;
-		  text-decoration:none;
-		  color:var(--text-color);
-		  font-size:0.95rem;
-		  transition:background .15s, transform .12s;
-		}
-		.top-menu a:hover{ background:rgba(0,134,255,0.08); transform:translateY(-2px) }
-		.top-menu .icon{ width:18px; height:18px; display:inline-block; vertical-align:middle }
+    header{text-align:center;margin-top:2rem}
+    #logo{width:180px;height:180px;margin:auto}
 
-		header{ text-align:center; margin-top:2rem; padding:0 1rem }
-		#logo{ width:180px; height:180px; margin:0 auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)) }
-		header h1{ font-size:2rem; margin:0.6rem 0 0.3rem }
-		header p{ color:#555; margin:0 }
+    main{max-width:1200px;width:100%;padding:2rem 1rem}
 
-		main{
-		  width:100%;
-		  max-width:1200px;
-		  padding:2rem 1rem;
-		  display:flex;
-		  flex-direction:column;
-		  gap:3rem;
-		  box-sizing:border-box;
-		}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:1.5rem;
+    }
 
-		.grid{
-		  display:grid;
-		  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-		  gap:1.5rem;
-		}
+    .comic{
+      background:#fff;
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 4px 10px rgba(0,0,0,.08);
+      cursor:pointer;
+    }
+    .comic img{width:100%;display:block}
 
-		.comic{
-		  background:white;
-		  border-radius:10px;
-		  overflow:hidden;
-		  box-shadow:0 4px 10px rgba(0,0,0,0.08);
-		  transition:transform .2s ease;
-		  cursor:pointer;
-		}
-		.comic:hover{ transform:translateY(-4px) }
-		.comic img{ width:100%; display:block; opacity:0; transform:translateY(20px); transition:opacity .5s, transform .5s }
+    footer{text-align:center;padding:1rem}
 
-		section.about{
-		  text-align:center;
-		  padding:2rem 1rem;
-		  background-color:rgba(255,255,255,0.9);
-		  border-radius:10px;
-		  box-shadow:0 2px 8px rgba(0,0,0,0.06);
-		  max-width:1200px;
-		  margin:0 auto;
-		}
+    /* OVERLAYS (About & Market) */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(255,255,255,.98);
+      z-index:1100;
+      display:none;
+      flex-direction:column;
+      padding:2rem 1rem;
+    }
+    .overlay.open{display:flex}
 
-		.contact-wrapper{ display:flex; gap:2rem; align-items:stretch; flex-wrap:wrap; margin-top:1rem }
-		.contact-wrapper form{ flex:1 1 420px; max-width:50%; display:flex; flex-direction:column; gap:1rem; box-sizing:border-box; justify-content:center }
-		.contact-image { flex:1 1 300px; max-width:50%; display:flex; align-items:center; justify-content:center }
-		.contact-image img{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.12); display:block }
+    .overlay-header{
+      max-width:1200px;
+      margin:0 auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
 
-		.contact input[type="text"], .contact input[type="email"], .contact textarea {
-		  padding:0.75rem; border-radius:8px; border:1px solid #d0dbe9; outline:none; transition:box-shadow .2s, border-color .2s; font-size:1rem; box-sizing:border-box;
-		}
-		.contact input:focus, .contact textarea:focus { border-color:var(--accent); box-shadow:0 4px 14px rgba(13,110,255,0.12) }
-		.contact button { padding:0.8rem 1.25rem; border-radius:999px; border:none; background:var(--accent); color:#fff; cursor:pointer; font-size:1rem; align-self:center; transition:transform .15s, background .15s }
-		.contact button:hover { transform:translateY(-2px); background:#1d8ae0 }
+    .close-btn{
+      background:transparent;
+      border:2px solid #ccc;
+      padding:6px 10px;
+      border-radius:8px;
+      cursor:pointer;
+    }
 
-		.socials{ margin-top:1.25rem; display:flex; gap:1rem; align-items:center }
-		.socials img{ width:28px; height:28px; display:block; transition:transform .15s, filter .15s; filter:none }
-		.socials img:hover{ transform:scale(1.08); filter:brightness(.9) saturate(1.2) }
-
-		#backToTop{ position:fixed; bottom:20px; right:20px; width:36px; height:36px; border:2px solid var(--social-color); border-radius:50%; background:transparent; cursor:pointer; z-index:100; opacity:.8; display:flex; align-items:center; justify-content:center; visibility:hidden }
-		#backToTop:hover{ transform:translateY(-2px); opacity:1 }
-
-		#lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.85); display:flex; justify-content:center; align-items:center; z-index:999; visibility:hidden; opacity:0; transition:opacity .25s, visibility .25s; padding:1rem }
-		#lightbox.visible{ visibility:visible; opacity:1 }
-		#lightbox img{ max-width:92%; max-height:92%; border-radius:10px; box-shadow:0 6px 30px rgba(0,0,0,.6) }
-
-		footer{ text-align:center; padding:1rem 1rem; color:var(--social-color); font-family:inherit; font-size:.9rem; width:100%; margin-top:2rem }
-
-		/* About page (full screen overlay) */
-		#about-page{
-		  position:fixed;
-		  inset:0;
-		  background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.99));
-		  z-index:1100;
-		  display:none;
-		  flex-direction:column;
-		  gap:1rem;
-		  padding:2.5rem 1rem;
-		  box-sizing:border-box;
-		  align-items:stretch;
-		}
-		#about-page.open{ display:flex; }
-		#about-page .about-header{
-		  display:flex;
-		  align-items:center;
-		  justify-content:space-between;
-		  gap:1rem;
-		  max-width:1200px;
-		  margin:0 auto;
-		}
-		#about-page .about-header h2{ margin:0; font-size:1.4rem }
-		#about-page .close-about{
-		  background:transparent; border:2px solid #ddd; padding:8px 10px; border-radius:8px; cursor:pointer;
-		}
-
-		/* Panorama gallery */
-		.panorama{
-		  width:100%;
-		  flex:1 1 auto;
-		  display:flex;
-		  gap:0; /* no gap between images */
-		  overflow-x:auto;
-		  scroll-snap-type:x mandatory;
-		  -webkit-overflow-scrolling:touch;
-		  align-items:center;
-		  height:calc(100vh - 160px); /* gallery taller since contact is back in main */
-		}
-		.panorama::-webkit-scrollbar{ height:10px }
-		.panorama::-webkit-scrollbar-thumb{ background:rgba(0,0,0,0.15); border-radius:999px }
-
-		.panorama img{
-		  flex:0 0 auto;
-		  height:100%;
-		  width:auto; /* preserve aspect ratio for panoramic viewing */
-		  object-fit:cover;
-		  display:block;
-		  scroll-snap-align:start;
-		  border:0;
-		  margin:0;
-		  padding:0;
-		}
-
-		@media(max-width:980px){
-		  .contact-wrapper form, .contact-wrapper .contact-image { max-width:100%; flex-basis:100% }
-		  section.about { text-align:center; padding:1.5rem }
-		  header h1{ font-size:1.6rem }
-		  .panorama{ height:60vh }
-		  #about-page .about-header{ padding-bottom:0.5rem }
-		}
-		  
-	/* =========================
-   DARK MODE AUTOMÁTICO
-   ========================= */
-@media (prefers-color-scheme: dark) {
-
-  :root{
-    --bg-color:#0086FF;
-    --text-color:#FFFFFF;
-    --accent:#FFFFFF;
-    --social-color:#FFFFFF;
-  }
-
-  body{
-    background-color:var(--bg-color);
-    color:var(--text-color);
-    background-image:
-      linear-gradient(to right, #02AFFF 1px, transparent 1px),
-      linear-gradient(to bottom, #02AFFF 1px, transparent 1px);
-  }
-
-  /* Texto secundario */
-  header p,
-  section.about p{
-    color:rgba(255,255,255,0.85);
-  }
-
-  /* Menú superior */
-  .top-menu{
-    background:rgba(0,134,255,0.9);
-    box-shadow:0 6px 18px rgba(0,0,0,0.25);
-  }
-
-  .top-menu a{
-    color:#FFFFFF;
-  }
-
-  .top-menu a:hover{
-    background:rgba(255,255,255,0.15);
-  }
-
-  /* Tarjetas de cómic */
-  .comic{
-    background:#0086FF;
-    box-shadow:0 6px 18px rgba(0,0,0,0.25);
-  }
-
-  /* Secciones con fondo blanco */
-  section.about,
-  .contact{
-    background:rgba(0,134,255,0.95);
-    box-shadow:0 6px 18px rgba(0,0,0,0.25);
-  }
-
-  /* Formularios */
-  .contact input,
-  .contact textarea{
-    background:rgba(255,255,255,0.12);
-    border-color:rgba(255,255,255,0.35);
-    color:#FFFFFF;
-  }
-
-  .contact input::placeholder,
-  .contact textarea::placeholder{
-    color:rgba(255,255,255,0.7);
-  }
-
-  .contact input:focus,
-  .contact textarea:focus{
-    border-color:#FFFFFF;
-    box-shadow:0 4px 14px rgba(255,255,255,0.25);
-  }
-
-  .contact button{
-    background:#FFFFFF;
-    color:#0086FF;
-  }
-
-  .contact button:hover{
-    background:#E6F4FF;
-  }
-
-  /* Footer */
-  footer{
-    color:#FFFFFF;
-  }
-
-  /* Back to top */
-  #backToTop{
-    border-color:#FFFFFF;
-  }
-
-  #backToTop svg path{
-    stroke:#FFFFFF;
-  }
-
-  /* About overlay */
-  #about-page{
-    background:#0086FF;
-    color:#FFFFFF;
-  }
-
-  #about-page .close-about{
-    border-color:rgba(255,255,255,0.5);
-    color:#FFFFFF;
-  }
-
-  /* Scrollbar panorama */
-  .panorama::-webkit-scrollbar-thumb{
-    background:rgba(255,255,255,0.4);
-  }
-}
-		  
-/* =========================
-   CONTACTO SIN FONDO NI SOMBRA
-   ========================= */
-
-/* Bloque contacto: transparente */
-.contact{
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-/* Imagen de contacto: sin sombra */
-.contact-image img{
-  box-shadow: none !important;
-}
-		  
-/* =========================
-   SOCIAL ICONS — DARK MODE (IMG SVG)
-   ========================= */
-@media (prefers-color-scheme: dark){
-  .socials img{
-    filter: brightness(0) invert(1);
-  }
-}
-
-
-	  </style>
+    .panorama{
+      flex:1;
+      display:flex;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      height:calc(100vh - 140px);
+    }
+    .panorama img{
+      height:100%;
+      width:auto;
+      scroll-snap-align:start;
+    }
+  </style>
 </head>
+
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K85FBTFL"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
 
-  <!-- Top-right menu (sin "Contacto") -->
-  <nav class="top-menu" aria-label="Menú principal">
-    <a href="#home" id="homeLink" aria-label="Ir a inicio">
-      <svg class="icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 11.5L12 3l9 8.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V11.5z" fill="currentColor"/></svg>
-      <span>Inicio</span>
-    </a>
-    <a href="#" id="aboutLink" aria-haspopup="dialog" aria-controls="about-page">
-      <svg class="icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/></svg>
-      <span>About</span>
-    </a>
-  </nav>
+<nav class="top-menu">
+  <a href="#home" id="homeLink">Inicio</a>
+  <a href="#" id="aboutLink">About</a>
+  <a href="#" id="marketLink">The Market</a>
+</nav>
 
-  <header id="home">
-    <div id="logo" aria-hidden="true"></div>
-    <h1>dibujo porque me duele</h1>
-    <p>actualizamos mínimo cada semana&nbsp;</p>
-  </header>
+<header id="home">
+  <div id="logo"></div>
+  <h1>dibujo porque me duele</h1>
+  <p>actualizamos mínimo cada semana</p>
+</header>
 
-  <main>
-    <section class="grid" aria-label="Tiras">
-	  <div class="comic"><img src="assets/tiras/tira011.png" alt="Tira cómica Icedtooz #011"></div>
-	  <div class="comic"><img src="assets/tiras/tira010.png" alt="Tira cómica Icedtooz #010"></div>
-	  <div class="comic"><img src="assets/tiras/tira09.png" alt="Tira cómica Icedtooz #09"></div>
-	  <div class="comic"><img src="assets/tiras/tira08.png" alt="Tira cómica Icedtooz #08"></div>	
-	  <div class="comic"><img src="assets/tiras/tira07.png" alt="Tira cómica Icedtooz #07"></div>
-	  <div class="comic"><img src="assets/tiras/tira06.png" alt="Tira cómica Icedtooz #06"></div>
-	  <div class="comic"><img src="assets/tiras/tira05.png" alt="Tira cómica Icedtooz #05"></div>
-	  <div class="comic"><img src="assets/tiras/tira04.png" alt="Tira cómica Icedtooz #04"></div>
-	  <div class="comic"><img src="assets/tiras/tira03.png" alt="Tira cómica Icedtooz #03"></div>
-      <div class="comic"><img src="assets/tiras/tira02.png" alt="Tira cómica Icedtooz #02"></div>
-	  <div class="comic"><img src="assets/tiras/tira01.png" alt="Tira cómica Icedtooz #01"></div>
-    </section>
-
-   
-
-    <!-- CONTACT: restaurado en main como pediste -->
-    <section class="contact" aria-labelledby="contact-title">
-      <h2 id="contact-title">Deja aquí tus sugerencias, halagos o insultos ;)</h2>
-
-      <div class="contact-wrapper">
-        <form id="contactForm" action="https://formspree.io/f/xeovjaav" method="POST" aria-label="Formulario de contacto">
-          <input type="text" name="name" placeholder="¿Cómo te llamas?" required aria-label="Nombre">
-          <input type="email" name="email" placeholder="Dinos tu email" required aria-label="Correo electrónico">
-          <textarea name="message" placeholder="Cuéntanos" required rows="5" aria-label="Mensaje"></textarea>
-          <button type="submit">Enviar</button>
-        </form>
-
-        <div class="contact-image" aria-hidden="true">
-          <img src="assets/icedtooz-handle.png" alt="Imagen de contacto">
-        </div>
-      </div>
-
-      <p class="form-status" style="margin-top:1rem; color:green;" aria-live="polite"></p>
-
-      <div class="socials" aria-label="Redes sociales">
-        <a href="https://instagram.com/icedtooz" target="_blank" aria-label="Instagram">
-          <img src="assets/icons/instagram.svg" alt="Instagram">
-        </a>
-        <a href="https://icedtooz.bsky.social/" target="_blank" aria-label="Bluesky">
-          <img src="assets/icons/bluesky.svg" alt="Bluesky">
-        </a>
-        <a href="https://tiktok.com/@icedtooz" target="_blank" aria-label="TikTok">
-          <img src="assets/icons/tiktok.svg" alt="TikTok">
-        </a>
-        <a href="https://facebook.com/icedtooz" target="_blank" aria-label="Facebook">
-          <img src="assets/icons/facebook.svg" alt="Facebook">
-        </a>
-        <a href="https://youtube.com/@icedtooz" target="_blank" aria-label="YouTube">
-          <img src="assets/icons/youtube.svg" alt="YouTube">
-        </a>
-        <a href="https://x.com/icedtooz" target="_blank" aria-label="X">
-          <img src="assets/icons/x.svg" alt="X">
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    icedtooz 2026 © Todos los derechos reservados
-  </footer>
-
-  <div id="lightbox" role="dialog" aria-hidden="true"><img src="" alt="Tira ampliada"></div>
-
-  <button id="backToTop" aria-label="Volver arriba" title="Volver arriba" aria-hidden="true">
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 0 L6 12 M0 6 L6 0 L12 6" stroke="#222" stroke-width="2"/>
-    </svg>
-  </button>
-
-  <!-- ABOUT PAGE: full-screen overlay con solo la galería panorámica -->
-  <section id="about-page" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="about-page-title">
-    <div class="about-header">
-      <h2 id="about-page-title">About — ¿Pero qué es esto?</h2>
-      <div>
-        <button class="close-about" id="closeAbout" aria-label="Cerrar about">Cerrar</button>
-      </div>
-    </div>
-
-    <!-- Panorama container: imágenes sin separación, scroll lateral -->
-    <div class="panorama" aria-label="¿Pero qué es esto?" tabindex="0">
-      <!-- Sustituye estas rutas por tus imágenes reales -->
-      <img src="assets/about/about01.jpg" alt="Panorámica 1">
-      <img src="assets/about/about02.jpg" alt="Panorámica 2">
-      <img src="assets/about/about03.jpg" alt="Panorámica 3">
-      <img src="assets/about/about04.jpg" alt="Panorámica 4">
-	  <img src="assets/about/about05.jpg" alt="Panorámica 1">
-      <img src="assets/about/about06.jpg" alt="Panorámica 2">
-      <img src="assets/about/about07.jpg" alt="Panorámica 3">
-      <img src="assets/about/about08.jpg" alt="Panorámica 4">
-	  <img src="assets/about/about09.jpg" alt="Panorámica 1">
-      <img src="assets/about/about10.jpg" alt="Panorámica 2">
-      <img src="assets/about/about11.jpg" alt="Panorámica 3">
-    </div>
+<main>
+  <section class="grid">
+    <div class="comic"><img src="assets/tiras/tira011.png"></div>
+    <div class="comic"><img src="assets/tiras/tira010.png"></div>
+    <div class="comic"><img src="assets/tiras/tira09.png"></div>
   </section>
+</main>
 
-  <script>
-    lottie.loadAnimation({
-      container: document.getElementById('logo'),
-      renderer: 'svg',
-      loop: true,
-      autoplay: true,
-      path: 'assets/logo.json'
-    });
+<footer>icedtooz 2026 ©</footer>
 
-    // Contact Form (en main)
-    const contactForm = document.getElementById('contactForm');
-    const formStatus = document.querySelector('.form-status');
-    if(contactForm){
-      contactForm.addEventListener('submit', async e => {
-        e.preventDefault();
-        const formData = new FormData(contactForm);
-        try {
-          const response = await fetch(contactForm.action, {method: contactForm.method, body: formData, headers:{'Accept':'application/json'}});
-          if(response.ok){formStatus.textContent="¡Mensaje enviado! Gracias por contactarnos."; contactForm.reset(); formStatus.style.color="#0086ff";}
-          else{formStatus.textContent="Error al enviar. Por favor, inténtalo de nuevo."; formStatus.style.color="#ff45b2";}
-        } catch(err){
-          formStatus.textContent="Error al enviar. Comprueba tu conexión."; formStatus.style.color="#ff45b2";
-        }
-      });
-    }
+<!-- ABOUT -->
+<section id="about-page" class="overlay" aria-hidden="true">
+  <div class="overlay-header">
+    <h2>About — ¿Pero qué es esto?</h2>
+    <button class="close-btn" id="closeAbout">Cerrar</button>
+  </div>
+  <div class="panorama">
+    <img src="assets/about/about01.jpg">
+    <img src="assets/about/about02.jpg">
+    <img src="assets/about/about03.jpg">
+  </div>
+</section>
 
-    // Scroll fade-in for comics
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => { if(entry.isIntersecting){ const img=entry.target.querySelector('img'); if(img){ img.style.opacity=1; img.style.transform='translateY(0)'; } } });
-    },{threshold:0.2});
-    document.querySelectorAll('.comic').forEach(el=>observer.observe(el));
+<!-- MARKET -->
+<section id="market-page" class="overlay" aria-hidden="true">
+  <div class="overlay-header">
+    <h2>The Market</h2>
+    <button class="close-btn" id="closeMarket">Cerrar</button>
+  </div>
+  <div class="panorama">
+	<img src="icedtooz/assets/market/market00.jpg">
+    <img src="icedtooz/assets/market/market01.jpg">
+    <img src="icedtooz/assets/market/market02.jpg">
+    <img src="icedtooz/assets/market/market03.jpg">
+    <img src="icedtooz/assets/market/market04.jpg">
+	<img src="icedtooz/assets/market/market05.jpg">
+	<img src="icedtooz/assets/market/market06.jpg">
+  </div>
+</section>
 
-    // Back to top
-    const backToTop = document.getElementById('backToTop');
-    window.addEventListener('scroll',()=>{backToTop.style.visibility=window.scrollY>200?'visible':'hidden';});
-    backToTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+<script>
+  lottie.loadAnimation({
+    container: document.getElementById('logo'),
+    renderer: 'svg',
+    loop: true,
+    autoplay: true,
+    path: 'assets/logo.json'
+  });
 
-    // Lightbox
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = lightbox.querySelector('img');
-    document.querySelectorAll('.comic img').forEach(img => img.addEventListener('click',()=>{ lightboxImg.src=img.src; lightbox.classList.add('visible'); lightbox.style.visibility='visible'; lightbox.setAttribute('aria-hidden','false'); }));
-    lightbox.addEventListener('click',(e)=>{ if(e.target===lightbox){ lightbox.classList.remove('visible'); lightbox.style.visibility='hidden'; lightbox.setAttribute('aria-hidden','true'); } });
-    window.addEventListener('keydown',(e)=>{ if(e.code==='Space'){ lightbox.classList.remove('visible'); lightbox.style.visibility='hidden'; lightbox.setAttribute('aria-hidden','true'); } });
+  const aboutPage = document.getElementById('about-page');
+  const marketPage = document.getElementById('market-page');
 
-    // ABOUT page open/close logic
-    const aboutLink = document.getElementById('aboutLink');
-    const aboutPage = document.getElementById('about-page');
-    const closeAbout = document.getElementById('closeAbout');
-    const homeLink = document.getElementById('homeLink');
+  document.getElementById('aboutLink').onclick = e => {
+    e.preventDefault();
+    aboutPage.classList.add('open');
+    document.body.style.overflow='hidden';
+  };
 
-    function openAbout(){
-      aboutPage.classList.add('open');
-      aboutPage.setAttribute('aria-hidden','false');
-      closeAbout.focus();
-      document.body.style.overflow = 'hidden';
-    }
-    function closeAboutFn(){
+  document.getElementById('marketLink').onclick = e => {
+    e.preventDefault();
+    marketPage.classList.add('open');
+    document.body.style.overflow='hidden';
+  };
+
+  document.getElementById('closeAbout').onclick = () => {
+    aboutPage.classList.remove('open');
+    document.body.style.overflow='';
+  };
+
+  document.getElementById('closeMarket').onclick = () => {
+    marketPage.classList.remove('open');
+    document.body.style.overflow='';
+  };
+
+  window.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){
       aboutPage.classList.remove('open');
-      aboutPage.setAttribute('aria-hidden','true');
-      document.body.style.overflow = '';
-      homeLink.focus();
+      marketPage.classList.remove('open');
+      document.body.style.overflow='';
     }
+  });
+</script>
 
-    aboutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      openAbout();
-    });
-    closeAbout.addEventListener('click', closeAboutFn);
-
-    // close about with Escape
-    window.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape' && aboutPage.classList.contains('open')) {
-        closeAboutFn();
-      }
-    });
-
-    // clicking outside content closes About
-    aboutPage.addEventListener('click', (e) => {
-      if(e.target === aboutPage){
-        closeAboutFn();
-      }
-    });
-
-    // Accessibility: allow panorama keyboard scroll (left/right)
-    const panorama = document.querySelector('.panorama');
-    if(panorama){
-      panorama.tabIndex = 0; // make focusable
-      panorama.addEventListener('keydown', (e) => {
-        if(e.key === 'ArrowRight'){ panorama.scrollBy({left: window.innerWidth * 0.8, behavior:'smooth'}); }
-        if(e.key === 'ArrowLeft'){ panorama.scrollBy({left: -window.innerWidth * 0.8, behavior:'smooth'}); }
-      });
-    }
-  </script>
 </body>
 </html>
